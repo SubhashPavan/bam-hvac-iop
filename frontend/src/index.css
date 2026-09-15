@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (used by the Inventory accelerator's theme toggle). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Navy base — warm purple-navy ink & surfaces (Process.IQ) ── */
+  --color-navy-50: #FAFAF6;
+  --color-navy-100: #F4F2EC;
+  --color-navy-200: #EFEEE9;
+  --color-navy-300: #C7C4D3;
+  --color-navy-400: #9B97AB;
+  --color-navy-500: #6E6A82;
+  --color-navy-600: #4C485E;
+  --color-navy-700: #2D2945;
+  --color-navy-800: #251F3A;
+  --color-navy-900: #1F1B2E;
+
+  /* ── Accent (indigo) — primary actions, links, highlights (Process.IQ) ── */
+  --color-accent-50: #EEF2FF;
+  --color-accent-100: #E0E7FF;
+  --color-accent-200: #C7D2FE;
+  --color-accent-300: #A5B4FC;
+  --color-accent-400: #818CF8;
+  --color-accent-500: #6366F1;
+  --color-accent-600: #4F46E5;
+  --color-accent-700: #4338CA;
+  --color-accent-800: #3730A3;
+  --color-accent-900: #312E81;
+
+  /* ── Semantic status ── */
+  --color-success-50: #ECFDF5;
+  --color-success-500: #22C55E;
+  --color-success-600: #16A34A;
+  --color-success-700: #15803D;
+
+  --color-warn-50: #FFFBEB;
+  --color-warn-500: #F59E0B;
+  --color-warn-600: #D97706;
+  --color-warn-700: #B45309;
+
+  --color-danger-50: #FEF2F2;
+  --color-danger-500: #EF4444;
+  --color-danger-600: #DC2626;
+  --color-danger-700: #B91C1C;
+
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #FAFAF6;
+  color: #1F1B2E;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Global scrollbar ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ── Scoped custom scrollbar for inner panels ── */
+.custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+/* ── Animations ── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+}
+
+@keyframes fade-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes thinking-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-fade-slide-in { animation: fade-slide-in 0.3s ease-out forwards; }
+.animate-fade-in { animation: fade-in 0.25s ease-out forwards; }
+.animate-spin-slow { animation: spin 2s linear infinite; }
+
+.is-spinner { animation: spin 0.9s linear infinite; }
+
+.is-shimmer {
+  background: linear-gradient(90deg, #E2E8F0 0%, #F1F5F9 50%, #E2E8F0 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+.is-thinking-dot {
+  animation: thinking-dot 1.4s infinite ease-in-out both;
+}
+
+/* ── Markdown prose inside chat bubbles / insights ── */
+.is-prose {
+  color: #1F2937;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.is-prose p { margin: 0 0 10px; }
+.is-prose p:last-child { margin-bottom: 0; }
+.is-prose h1, .is-prose h2, .is-prose h3, .is-prose h4 {
+  font-weight: 600;
+  color: #0F172A;
+  margin: 14px 0 6px;
+}
+.is-prose h1 { font-size: 18px; }
+.is-prose h2 { font-size: 16px; }
+.is-prose h3 { font-size: 15px; }
+.is-prose h4 { font-size: 14px; }
+.is-prose ul, .is-prose ol { margin: 6px 0 10px 20px; padding: 0; }
+.is-prose li { margin: 3px 0; }
+.is-prose code {
+  background: #F1F5F9;
+  color: #0369A1;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12.5px;
+}
+.is-prose pre {
+  background: #0F172A;
+  color: #E2E8F0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 12.5px;
+  margin: 8px 0;
+}
+.is-prose pre code { background: transparent; color: inherit; padding: 0; }
+.is-prose a { color: #0284C7; text-decoration: none; }
+.is-prose a:hover { text-decoration: underline; }
+.is-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.is-prose th, .is-prose td {
+  padding: 6px 10px;
+  border: 1px solid #E2E8F0;
+  text-align: left;
+}
+.is-prose th {
+  background: #F8FAFC;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* ── React Grid Layout overrides (canvas blocks) ── */
+.react-grid-layout { position: relative; }
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+.react-grid-item.resizing { z-index: 3; opacity: 0.9; }
+.react-grid-item.react-draggable-dragging {
+  z-index: 10;
+  cursor: grabbing !important;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25);
+}
+.react-grid-item.react-grid-placeholder {
+  background: rgba(14, 165, 233, 0.12);
+  border: 2px dashed #0EA5E9;
+  border-radius: 12px;
+  opacity: 1;
+  transition-duration: 100ms;
+}
+/* ── Grid block resize handles ──
+   We expose all eight handles (corners + edges) so users can stretch a
+   block from any side. Edge handles are thin invisible strips that pick
+   up the right cursor on hover; corner handles get a small chevron tick
+   so the affordance is discoverable. */
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  background-image: none !important; /* override library default */
+}
+/* Corners — 14×14 hit area */
+.react-grid-item > .react-resizable-handle-se {
+  bottom: 0; right: 0; width: 14px; height: 14px; cursor: se-resize;
+}
+.react-grid-item > .react-resizable-handle-sw {
+  bottom: 0; left: 0; width: 14px; height: 14px; cursor: sw-resize;
+}
+.react-grid-item > .react-resizable-handle-ne {
+  top: 0; right: 0; width: 14px; height: 14px; cursor: ne-resize;
+}
+.react-grid-item > .react-resizable-handle-nw {
+  top: 0; left: 0; width: 14px; height: 14px; cursor: nw-resize;
+}
+/* Edges — thin strips spanning the full side, inset slightly so they
+   don't fight with the corner handles */
+.react-grid-item > .react-resizable-handle-e {
+  top: 14px; bottom: 14px; right: 0; width: 6px; cursor: ew-resize;
+}
+.react-grid-item > .react-resizable-handle-w {
+  top: 14px; bottom: 14px; left: 0; width: 6px; cursor: ew-resize;
+}
+.react-grid-item > .react-resizable-handle-s {
+  left: 14px; right: 14px; bottom: 0; height: 6px; cursor: ns-resize;
+}
+.react-grid-item > .react-resizable-handle-n {
+  left: 14px; right: 14px; top: 0; height: 6px; cursor: ns-resize;
+}
+/* SE corner gets a small chevron so users notice resize is available */
+.react-grid-item > .react-resizable-handle-se::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid #94A3B8;
+  border-bottom: 2px solid #94A3B8;
+  border-radius: 1px;
+  transition: border-color 120ms;
+}
+.react-grid-item:hover > .react-resizable-handle-se::after {
+  border-right-color: #0EA5E9;
+  border-bottom-color: #0EA5E9;
+}
+/* Edge handles fade in a thin accent line on hover so users can find them */
+.react-grid-item > .react-resizable-handle-e,
+.react-grid-item > .react-resizable-handle-w,
+.react-grid-item > .react-resizable-handle-n,
+.react-grid-item > .react-resizable-handle-s {
+  transition: background 120ms;
+}
+.react-grid-item > .react-resizable-handle-e:hover,
+.react-grid-item > .react-resizable-handle-w:hover {
+  background: linear-gradient(to right, transparent, rgba(14, 165, 233, 0.25));
+}
+.react-grid-item > .react-resizable-handle-w:hover {
+  background: linear-gradient(to left, transparent, rgba(14, 165, 233, 0.25));
+}
+.react-grid-item > .react-resizable-handle-n:hover,
+.react-grid-item > .react-resizable-handle-s:hover {
+  background: linear-gradient(to bottom, transparent, rgba(14, 165, 233, 0.25));
+}
+.react-grid-item > .react-resizable-handle-n:hover {
+  background: linear-gradient(to top, transparent, rgba(14, 165, 233, 0.25));
+}
+
+/* ── Recharts tooltip polish ── */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #0F172A !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25) !important;
+  padding: 8px 12px !important;
+}
+.recharts-tooltip-wrapper .recharts-tooltip-label,
+.recharts-tooltip-wrapper .recharts-tooltip-item {
+  color: #F8FAFC !important;
+  font-size: 12px !important;
+}

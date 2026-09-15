@@ -1,0 +1,16 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic==2.9.0
+pydantic-settings==2.5.0
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.29.0
+aiosqlite>=0.20.0
+python-dotenv==1.0.1
+# ── Sage agent (Claude via Azure AI Foundry) ─────────────────
+anthropic>=0.40.0      # LLM tool-calling; without it Sage falls back to the rule router
+# ── ML (forecasting service) ─────────────────────────────────
+numpy>=1.26            # Croston/SBA/TSB + classification + backtest (implemented in app/ml)
+# Optional production swaps (behind app/ml/methods.auto_forecast):
+# statsforecast>=1.7.0    # Nixtla — Croston / SBA / TSB / TimeGPT
+# lightgbm>=4.5.0         # global gradient-boosted forecaster for feature-rich SKUs
+# scikit-learn>=1.5.0
