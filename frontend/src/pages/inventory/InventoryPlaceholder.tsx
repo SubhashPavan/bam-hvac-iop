@@ -19,8 +19,8 @@ export default function InventoryPlaceholder() {
         <Hammer className="h-6 w-6" />
       </div>
       <div>
-        <h1 className="text-[18px] font-semibold">{title}</h1>
-        <p className="mt-1 text-[13px] text-navy-500 dark:text-slate-500">This screen is next in the build plan — coming soon.</p>
+        <h1 className="text-[19.5px] font-semibold">{title}</h1>
+        <p className="mt-1 text-[14.5px] text-navy-500 dark:text-slate-500">This screen is next in the build plan — coming soon.</p>
       </div>
     </div>
   );

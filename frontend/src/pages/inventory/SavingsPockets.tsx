@@ -1,14 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Sparkles, ArrowLeft, Search, ChevronRight, Layers, Ban, ArrowLeftRight, Truck,
-  AlertTriangle, ArrowRight, Grid3x3, LayoutGrid,
+  AlertTriangle, ArrowRight, Grid3x3, LayoutGrid, Send, CheckCircle2,
 } from 'lucide-react';
 import { MATERIALS } from '../../data/inventoryMock';
 import type { Material } from '../../types/inventory';
 import { getSavingsMatrix, getMatrixNarrative, getOpportunities, fetchForecastSummaries } from '../../services/inventoryApi';
 import { useLiveOrMock } from './useLiveData';
+import { useRequestStore, type ActionKind } from '../../store/requestStore';
 import MaterialAnalysis from './MaterialAnalysis';
-import SkuGrid from './SkuGrid';
+import SkuGrid, { statusOf } from './SkuGrid';
+
+const STATUS_KIND: Record<string, ActionKind> = { Dispose: 'dispose', Reorder: 'increase_stock', Reduce: 'reduce_stock' };
 
 const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
 const TT: Record<string, string> = { rose: 'text-rose-600 dark:text-rose-400', amber: 'text-amber-600 dark:text-amber-400', mint: 'text-emerald-600 dark:text-emerald-400', violet: 'text-violet-600 dark:text-violet-400', accent: 'text-accent-600 dark:text-accent-400' };
@@ -23,9 +26,9 @@ const TIER_ORDER = ['A', 'B', 'C', 'D', 'E'];
 function Kpi({ value, label, sub, tone }: { value: string; label: string; sub?: string; tone?: string }) {
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className={`text-[17px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
-      <div className="mt-1.5 text-[10.5px] font-medium">{label}</div>
-      {sub && <div className="text-[9.5px] text-navy-400 dark:text-slate-500">{sub}</div>}
+      <div className={`text-[18px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
+      <div className="mt-1.5 text-[12px] font-medium">{label}</div>
+      {sub && <div className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</div>}
     </div>
   );
 }
@@ -42,6 +45,9 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
   const [material, setMaterial] = useState<Material | null>(null);
   const [drill, setDrill] = useState<Pocket | { key: 'cell'; label: string; ids: string[]; savings: number } | null>(null);
   const [search, setSearch] = useState('');
+  const createReq = useRequestStore((s) => s.create);
+  const [bulkDone, setBulkDone] = useState(0);
+  useEffect(() => setBulkDone(0), [drill]);
 
   const POCKET_META: Record<string, { label: string; desc: string; icon: any; tone: string }> = {
     excess_inventory: { label: 'Excess & overstock', desc: 'stock held above the optimal policy', icon: Layers, tone: 'amber' },
@@ -72,6 +78,33 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
       .sort((a, b) => b.current_stock_value - a.current_stock_value);
   }, [drill, plantIds, search]);
 
+  // How many of the drilled SKUs are actionable (i.e. not Healthy) — the bulk-submit count.
+  const actionable = useMemo(
+    () => drillMats.filter((m) => STATUS_KIND[statusOf(m, sumById.get(m.id)).label]),
+    [drillMats, sumById],
+  );
+
+  const submitAllToPlanner = () => {
+    let n = 0;
+    for (const m of actionable) {
+      const s = sumById.get(m.id);
+      const kind = STATUS_KIND[statusOf(m, s).label];
+      const savings = Math.round(s?.savings || 0);
+      const proposed = kind === 'dispose' ? 0 : Math.round(Math.max(0, m.current_stock_value - savings));
+      createReq({
+        seed: {
+          materialId: m.id, materialDesc: m.description, plantId: m.plant_id, kind,
+          currentValue: m.current_stock_value, proposedValue: proposed,
+          savings, cashRelease: Math.round(savings * 0.7),
+          justification: `Bulk-submitted from “${drill?.label}”.`,
+        },
+        note: `Bulk submission — ${drill?.label}`, priority: 'medium', routing: 'maintenance_planner',
+      });
+      n++;
+    }
+    setBulkDone(n);
+  };
+
   const cells = matrix?.cells || [];
   const tierMap: Record<string, string> = matrix?.tier || {};
   const cellMap = useMemo(() => { const m: Record<string, any> = {}; for (const c of cells) m[`${c.fsn}|${c.tier}`] = c; return m; }, [cells]);
@@ -83,13 +116,23 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
   if (drill) {
     return (
       <div className="px-6 py-5">
-        <button onClick={() => { setDrill(null); setSearch(''); }} className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-navy-200 px-2.5 py-1 text-[11.5px] font-medium text-navy-600 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5"><ArrowLeft className="h-3.5 w-3.5" /> Back</button>
+        <button onClick={() => { setDrill(null); setSearch(''); }} className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-navy-200 px-2.5 py-1 text-[13px] font-medium text-navy-600 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5"><ArrowLeft className="h-3.5 w-3.5" /> Back</button>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
-            <h1 className="text-[18px] font-semibold tracking-tight">{drill.label}</h1>
-            <p className="text-[12px] text-navy-500 dark:text-slate-500">{drillMats.length} SKUs{drill.savings ? <> · <span className="text-amber-600 dark:text-amber-400">{money(drill.savings)} savings potential</span></> : null} · click a SKU for its 360° analysis</p>
+            <h1 className="text-[19.5px] font-semibold tracking-tight">{drill.label}</h1>
+            <p className="text-[13.5px] text-navy-500 dark:text-slate-500">{drillMats.length} SKUs{drill.savings ? <> · <span className="text-amber-600 dark:text-amber-400">{money(drill.savings)} savings potential</span></> : null} · click a SKU for its 360° analysis</p>
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900"><Search className="h-3.5 w-3.5 text-navy-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search SKU…" className="w-44 border-none bg-transparent text-[12px] outline-none placeholder:text-navy-400 dark:text-slate-200" /></div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900"><Search className="h-3.5 w-3.5 text-navy-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search SKU…" className="w-44 border-none bg-transparent text-[13.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" /></div>
+            {bulkDone > 0 ? (
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-2 text-[13.5px] font-semibold text-emerald-600 dark:text-emerald-400"><CheckCircle2 className="h-4 w-4" /> {bulkDone} sent to Maintenance Planner</span>
+            ) : (
+              <button onClick={submitAllToPlanner} disabled={!actionable.length}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-2 text-[13.5px] font-semibold text-white hover:bg-accent-600 disabled:opacity-40">
+                <Send className="h-3.5 w-3.5" /> Submit all {actionable.length} → Maintenance Planner
+              </button>
+            )}
+          </div>
         </div>
         <SkuGrid mats={drillMats} sumById={sumById} onOpen={setMaterial} />
       </div>
@@ -106,20 +149,20 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="flex items-center gap-2 text-[19px] font-semibold tracking-tight"><Sparkles className="h-5 w-5 text-accent-500" /> Savings Wizard</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">Where your working capital is trapped, and the action to free it. Click a tile or pocket → its SKUs → the 360° analysis.</p>
+        <h1 className="flex items-center gap-2 text-[20px] font-semibold tracking-tight"><Sparkles className="h-5 w-5 text-accent-500" /> Savings Wizard</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">Where your working capital is trapped, and the action to free it. Click a tile or pocket → its SKUs → the 360° analysis.</p>
       </div>
 
       {/* Savings bridge — where the money is */}
       <div className="mb-4 rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-        <div className="mb-1.5 text-[13px] font-semibold">You're holding <span className="text-accent-600 dark:text-accent-300">{money(totalInv)}</span> across {k.sku_count || 0} SKUs — <span className="text-amber-600 dark:text-amber-400">{money(surplus + obsolete)} is optimization opportunity</span>.</div>
-        <div className="mb-2 text-[11px] text-navy-500 dark:text-slate-500">Rightsizing to the optimal policy releases working capital and writes off dead stock, landing you at an optimized ~{money(optimized)}.</div>
+        <div className="mb-1.5 text-[14.5px] font-semibold">You're holding <span className="text-accent-600 dark:text-accent-300">{money(totalInv)}</span> across {k.sku_count || 0} SKUs — <span className="text-amber-600 dark:text-amber-400">{money(surplus + obsolete)} is optimization opportunity</span>.</div>
+        <div className="mb-2 text-[12.5px] text-navy-500 dark:text-slate-500">Rightsizing to the optimal policy releases working capital and writes off dead stock, landing you at an optimized ~{money(optimized)}.</div>
         <div className="flex h-8 w-full overflow-hidden rounded-lg">
-          <div className="flex items-center justify-center bg-emerald-500/80 text-[10px] font-semibold text-white" style={{ width: seg(optimized) }} title="Optimized">{surplus + obsolete < totalInv * 0.9 ? 'Optimized' : ''}</div>
-          <div className="flex items-center justify-center bg-amber-500/80 text-[10px] font-semibold text-white" style={{ width: seg(surplus) }} title="Excess">{surplus > totalInv * 0.08 ? money(surplus) : ''}</div>
-          <div className="flex items-center justify-center bg-rose-500/80 text-[10px] font-semibold text-white" style={{ width: seg(obsolete) }} title="Obsolete">{obsolete > totalInv * 0.05 ? money(obsolete) : ''}</div>
+          <div className="flex items-center justify-center bg-emerald-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(optimized) }} title="Optimized">{surplus + obsolete < totalInv * 0.9 ? 'Optimized' : ''}</div>
+          <div className="flex items-center justify-center bg-amber-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(surplus) }} title="Excess">{surplus > totalInv * 0.08 ? money(surplus) : ''}</div>
+          <div className="flex items-center justify-center bg-rose-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(obsolete) }} title="Obsolete">{obsolete > totalInv * 0.05 ? money(obsolete) : ''}</div>
         </div>
-        <div className="mt-1.5 flex flex-wrap gap-3 text-[10px] text-navy-500 dark:text-slate-400">
+        <div className="mt-1.5 flex flex-wrap gap-3 text-[11.5px] text-navy-500 dark:text-slate-400">
           <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-emerald-500/80" /> Optimized {money(optimized)}</span>
           <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-amber-500/80" /> Excess / overstock {money(surplus)}</span>
           <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-rose-500/80" /> Obsolete {money(obsolete)}</span>
@@ -141,8 +184,8 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
       {/* Opportunity matrix */}
       <div className="mb-2 flex items-center gap-2">
         <Grid3x3 className="h-4 w-4 text-accent-500" />
-        <span className="text-[13px] font-semibold">Opportunity matrix</span>
-        <span className="text-[11px] text-navy-400 dark:text-slate-500">Fast / Slow / Non-moving × maintenance criticality — click a tile for its SKUs</span>
+        <span className="text-[14.5px] font-semibold">Opportunity matrix</span>
+        <span className="text-[12.5px] text-navy-400 dark:text-slate-500">Fast / Slow / Non-moving × maintenance criticality — click a tile for its SKUs</span>
       </div>
       <div className="mb-6">
         <div>
@@ -156,8 +199,8 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
                 return (
                   <div key={f} className="overflow-hidden rounded-xl border border-navy-100 bg-white dark:border-slate-800 dark:bg-[#211c33]">
                     <div className="flex items-center justify-between border-b border-navy-100 px-3.5 py-2.5 dark:border-slate-800">
-                      <div className="flex items-center gap-2"><span className={`h-2.5 w-2.5 rounded-full ${FSN_DOT[f]}`} /><span className="text-[12.5px] font-semibold">{fsnLabel(f)}</span></div>
-                      <span className="text-[10px] text-navy-400 dark:text-slate-500">{colOpps} opps · {money(colSav)}</span>
+                      <div className="flex items-center gap-2"><span className={`h-2.5 w-2.5 rounded-full ${FSN_DOT[f]}`} /><span className="text-[14px] font-semibold">{fsnLabel(f)}</span></div>
+                      <span className="text-[11.5px] text-navy-400 dark:text-slate-500">{colOpps} opps · {money(colSav)}</span>
                     </div>
                     <div className="space-y-2 p-2.5">
                       {TIER_ORDER.map((t) => {
@@ -166,17 +209,17 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
                         return (
                           <button key={t} onClick={() => setDrill({ key: 'cell', label: `${fsnLabel(f)} · ${c.tier_label}`, ids: MATERIALS.filter((m) => plantIds.includes(m.plant_id) && m.fsn === f && tierMap[m.id] === t).map((m) => m.id), savings: c.savings })}
                             className="flex w-full items-start gap-3 rounded-lg border border-navy-100 p-2.5 text-left transition-all hover:border-accent-300 hover:bg-navy-50/50 dark:border-slate-800 dark:hover:border-accent-500/40 dark:hover:bg-slate-800/40">
-                            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${SOFT_TONE[tone]}`}><span className="text-[18px] font-bold leading-none">{c.opp_count}</span></div>
+                            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${SOFT_TONE[tone]}`}><span className="text-[19.5px] font-bold leading-none">{c.opp_count}</span></div>
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5"><span className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${SOFT_TONE[tone]}`}>{c.tier}</span><span className="text-[11px] font-semibold">{c.tier_label}</span></div>
-                              <div className="mt-0.5 text-[10.5px] leading-snug text-navy-500 dark:text-slate-400">{narrative?.cells?.[`${f}|${t}`] || c.narration}</div>
-                              <div className="mt-0.5 text-[11px] font-semibold text-amber-600 dark:text-amber-400">{money(c.savings)} · {c.sku_count} SKUs</div>
+                              <div className="flex items-center gap-1.5"><span className={`rounded px-1.5 py-0.5 text-[10.5px] font-bold ${SOFT_TONE[tone]}`}>{c.tier}</span><span className="text-[12.5px] font-semibold">{c.tier_label}</span></div>
+                              <div className="mt-0.5 text-[12px] leading-snug text-navy-500 dark:text-slate-400">{narrative?.cells?.[`${f}|${t}`] || c.narration}</div>
+                              <div className="mt-0.5 text-[12.5px] font-semibold text-amber-600 dark:text-amber-400">{money(c.savings)} · {c.sku_count} SKUs</div>
                             </div>
                             <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-navy-300 dark:text-slate-600" />
                           </button>
                         );
                       })}
-                      {colOpps === 0 && <div className="px-2 py-4 text-center text-[10.5px] text-navy-400 dark:text-slate-500">No material opportunities</div>}
+                      {colOpps === 0 && <div className="px-2 py-4 text-center text-[12px] text-navy-400 dark:text-slate-500">No material opportunities</div>}
                     </div>
                   </div>
                 );
@@ -189,8 +232,8 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
       {/* Savings pockets */}
       <div className="mb-2 flex items-center gap-2">
         <LayoutGrid className="h-4 w-4 text-accent-500" />
-        <span className="text-[13px] font-semibold">Savings pockets</span>
-        <span className="text-[11px] text-navy-400 dark:text-slate-500">the same opportunity grouped by the play that frees it</span>
+        <span className="text-[14.5px] font-semibold">Savings pockets</span>
+        <span className="text-[12.5px] text-navy-400 dark:text-slate-500">the same opportunity grouped by the play that frees it</span>
       </div>
       <div>
         <div>
@@ -203,21 +246,21 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
                     <div className={`pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br ${GRAD[p.tone]} opacity-[0.13] blur-2xl`} />
                     <div className="relative flex items-center gap-2.5">
                       <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${GRAD[p.tone]} text-white shadow-sm`}><Icon style={{ width: 19, height: 19 }} /></span>
-                      <div className="min-w-0"><div className="text-[13.5px] font-semibold leading-tight">{p.label}</div><div className="truncate text-[10px] text-navy-400 dark:text-slate-500">{p.desc}</div></div>
+                      <div className="min-w-0"><div className="text-[15px] font-semibold leading-tight">{p.label}</div><div className="truncate text-[11.5px] text-navy-400 dark:text-slate-500">{p.desc}</div></div>
                     </div>
                     <div className="relative mt-3.5 flex items-end justify-between">
                       <div>
-                        <div className={`text-[27px] font-bold leading-none tracking-tight ${p.risk ? TT.rose : TT.amber}`}>{p.risk ? p.count : money(p.savings)}</div>
-                        <div className="mt-1 text-[9.5px] font-medium uppercase tracking-wide text-navy-400 dark:text-slate-500">{p.risk ? 'SKUs at stockout risk' : 'savings potential'}</div>
+                        <div className={`text-[29px] font-bold leading-none tracking-tight ${p.risk ? TT.rose : TT.amber}`}>{p.risk ? p.count : money(p.savings)}</div>
+                        <div className="mt-1 text-[11px] font-medium uppercase tracking-wide text-navy-400 dark:text-slate-500">{p.risk ? 'SKUs at stockout risk' : 'savings potential'}</div>
                       </div>
-                      <div className="text-right text-[10px] text-navy-500 dark:text-slate-400"><div className="text-[13px] font-semibold text-navy-800 dark:text-slate-200">{p.count}</div><div>SKUs{!p.risk ? ` · ${pct}%` : ''}</div></div>
+                      <div className="text-right text-[11.5px] text-navy-500 dark:text-slate-400"><div className="text-[14.5px] font-semibold text-navy-800 dark:text-slate-200">{p.count}</div><div>SKUs{!p.risk ? ` · ${pct}%` : ''}</div></div>
                     </div>
                     {!p.risk && <div className="relative mt-3 h-2 w-full overflow-hidden rounded-full bg-navy-100 dark:bg-slate-800/80"><div className={`h-full rounded-full bg-gradient-to-r ${GRAD[p.tone]}`} style={{ width: `${Math.max(4, pct)}%` }} /></div>}
-                    <div className={`relative mt-3 inline-flex items-center gap-1 text-[10.5px] font-semibold ${TT[p.tone]} opacity-80 transition-opacity group-hover:opacity-100`}>View SKUs <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" /></div>
+                    <div className={`relative mt-3 inline-flex items-center gap-1 text-[12px] font-semibold ${TT[p.tone]} opacity-80 transition-opacity group-hover:opacity-100`}>View SKUs <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" /></div>
                   </button>
                 );
               })}
-              {!opps && <div className="col-span-full py-10 text-center text-[12px] text-navy-400 dark:text-slate-500">Finding your savings pockets…</div>}
+              {!opps && <div className="col-span-full py-10 text-center text-[13.5px] text-navy-400 dark:text-slate-500">Finding your savings pockets…</div>}
             </div>
           )}
         </div>

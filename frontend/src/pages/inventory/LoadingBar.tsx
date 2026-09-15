@@ -66,7 +66,7 @@ export function Spinner({ className = 'h-4 w-4' }: { className?: string }) {
 /** Centered loader block with a message — for a panel/region that has no content yet. */
 export function LoaderBlock({ label = 'Loading…', className = '' }: { label?: string; className?: string }) {
   return (
-    <div className={`flex items-center justify-center gap-2.5 text-[12.5px] text-navy-400 dark:text-slate-500 ${className}`}>
+    <div className={`flex items-center justify-center gap-2.5 text-[14px] text-navy-400 dark:text-slate-500 ${className}`}>
       <Spinner /> {label}
     </div>
   );

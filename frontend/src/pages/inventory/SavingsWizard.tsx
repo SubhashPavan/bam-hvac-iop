@@ -17,9 +17,9 @@ const ABC_SUB: Record<string, string> = { A: 'top 80% value', B: 'next 15%', C: 
 function Kpi({ value, label, sub, tone }: { value: string; label: string; sub?: string; tone?: string }) {
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className={`text-[18px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
-      <div className="mt-1.5 text-[10.5px] font-medium">{label}</div>
-      {sub && <div className="text-[9.5px] text-navy-400 dark:text-slate-500">{sub}</div>}
+      <div className={`text-[19.5px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
+      <div className="mt-1.5 text-[12px] font-medium">{label}</div>
+      {sub && <div className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</div>}
     </div>
   );
 }
@@ -27,7 +27,7 @@ function Kpi({ value, label, sub, tone }: { value: string; label: string; sub?: 
 // highlight $amounts and integers in insight text (reference-style)
 function Insight({ text }: { text: string }) {
   const parts = text.split(/(\$[\d.,]+[MK]?|\b\d[\d,]*\b)/g);
-  return <p className="text-[11.5px] leading-relaxed text-navy-600 dark:text-slate-400">{parts.map((s, i) => /^(\$|\d)/.test(s) ? <b key={i} className="text-accent-600 dark:text-accent-300">{s}</b> : <Fragment key={i}>{s}</Fragment>)}</p>;
+  return <p className="text-[13px] leading-relaxed text-navy-600 dark:text-slate-400">{parts.map((s, i) => /^(\$|\d)/.test(s) ? <b key={i} className="text-accent-600 dark:text-accent-300">{s}</b> : <Fragment key={i}>{s}</Fragment>)}</p>;
 }
 
 function statusOf(m: Material, s?: ForecastSummaryRow) {
@@ -73,22 +73,22 @@ export default function SavingsWizard({ plantIds }: { plantIds: string[] }) {
   if (cell) {
     return (
       <div className="px-6 py-5">
-        <button onClick={() => { setCell(null); setSearch(''); }} className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-navy-200 px-2.5 py-1 text-[11.5px] font-medium text-navy-600 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5">
+        <button onClick={() => { setCell(null); setSearch(''); }} className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-navy-200 px-2.5 py-1 text-[13px] font-medium text-navy-600 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to matrix
         </button>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
-            <h1 className="text-[18px] font-semibold tracking-tight">{cell.fsn}-moving · Class {cell.abc}</h1>
-            <p className="text-[12px] text-navy-500 dark:text-slate-500">{drillMats.length} SKUs · {money(cellMap[`${cell.fsn}|${cell.abc}`]?.stock_value || 0)} stock · <span className="text-amber-600 dark:text-amber-400">{money(cellMap[`${cell.fsn}|${cell.abc}`]?.savings || 0)} savings potential</span> · suggested: <b>{ACTION_LABEL[cellMap[`${cell.fsn}|${cell.abc}`]?.action] || '—'}</b></p>
+            <h1 className="text-[19.5px] font-semibold tracking-tight">{cell.fsn}-moving · Class {cell.abc}</h1>
+            <p className="text-[13.5px] text-navy-500 dark:text-slate-500">{drillMats.length} SKUs · {money(cellMap[`${cell.fsn}|${cell.abc}`]?.stock_value || 0)} stock · <span className="text-amber-600 dark:text-amber-400">{money(cellMap[`${cell.fsn}|${cell.abc}`]?.savings || 0)} savings potential</span> · suggested: <b>{ACTION_LABEL[cellMap[`${cell.fsn}|${cell.abc}`]?.action] || '—'}</b></p>
           </div>
           <div className="flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900">
-            <Search className="h-3.5 w-3.5 text-navy-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search SKU…" className="w-44 border-none bg-transparent text-[12px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+            <Search className="h-3.5 w-3.5 text-navy-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search SKU…" className="w-44 border-none bg-transparent text-[13.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
           </div>
         </div>
         <div className="overflow-hidden rounded-xl border border-navy-100 bg-white dark:border-slate-800 dark:bg-[#211c33]">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-[12px]">
-              <thead><tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+            <table className="w-full min-w-[760px] text-[13.5px]">
+              <thead><tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                 <th className="px-4 py-2 font-semibold">Material</th><th className="px-3 py-2 font-semibold">Class</th><th className="px-3 py-2 font-semibold">Demand</th>
                 <th className="px-3 py-2 text-right font-semibold">SOH</th><th className="px-3 py-2 text-right font-semibold">Cover</th><th className="px-3 py-2 text-right font-semibold">Stock value</th><th className="px-3 py-2 font-semibold">Status</th><th className="px-3 py-2"></th>
               </tr></thead>
@@ -96,13 +96,13 @@ export default function SavingsWizard({ plantIds }: { plantIds: string[] }) {
                 const s = sumById.get(m.id); const st = statusOf(m, s);
                 return (
                   <tr key={m.id} onClick={() => setMaterial(m)} className="cursor-pointer border-b border-navy-50 last:border-0 hover:bg-navy-50/60 dark:border-slate-800/60 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id}</div></td>
+                    <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id}</div></td>
                     <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{m.xyz}·{m.fsn[0]}·{m.ved[0]}</td>
                     <td className={`px-3 py-2.5 capitalize ${PATTERN_TONE[s?.demand_pattern || ''] || 'text-navy-400 dark:text-slate-500'}`}>{s?.demand_pattern?.replace('_', ' ') || '—'}</td>
                     <td className="px-3 py-2.5 text-right tabular-nums">{m.on_hand_qty}</td>
                     <td className="px-3 py-2.5 text-right tabular-nums">{m.coverage_days}d</td>
                     <td className="px-3 py-2.5 text-right tabular-nums">{money(m.current_stock_value)}</td>
-                    <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${st.tone}`}>{st.label}</span></td>
+                    <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[11.5px] font-semibold ${st.tone}`}>{st.label}</span></td>
                     <td className="px-3 py-2.5 text-right"><ChevronRight className="ml-auto h-4 w-4 text-navy-300 dark:text-slate-600" /></td>
                   </tr>
                 );
@@ -117,8 +117,8 @@ export default function SavingsWizard({ plantIds }: { plantIds: string[] }) {
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="flex items-center gap-2 text-[19px] font-semibold tracking-tight"><Sparkles className="h-5 w-5 text-accent-500" /> Savings Wizard</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">Opportunity across the FSN × ABC matrix. Click any tile to drill into those SKUs and their 360° analysis.</p>
+        <h1 className="flex items-center gap-2 text-[20px] font-semibold tracking-tight"><Sparkles className="h-5 w-5 text-accent-500" /> Savings Wizard</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">Opportunity across the FSN × ABC matrix. Click any tile to drill into those SKUs and their 360° analysis.</p>
       </div>
 
       {/* comprehensive KPI band */}
@@ -136,31 +136,31 @@ export default function SavingsWizard({ plantIds }: { plantIds: string[] }) {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
         {/* FSN × ABC matrix */}
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-3 text-[12.5px] font-semibold">Opportunity matrix <span className="text-[11px] font-normal text-navy-400 dark:text-slate-500">movement (FSN) × value (ABC) — # SKUs · value · savings</span></div>
+          <div className="mb-3 text-[14px] font-semibold">Opportunity matrix <span className="text-[12.5px] font-normal text-navy-400 dark:text-slate-500">movement (FSN) × value (ABC) — # SKUs · value · savings</span></div>
           <div className="grid grid-cols-[70px_repeat(3,1fr)] gap-2">
             <div />
-            {ABC_COLS.map((a) => <div key={a} className="pb-1 text-center text-[10.5px] font-semibold text-navy-500 dark:text-slate-400">{a} <span className="font-normal text-navy-400 dark:text-slate-500">· {ABC_SUB[a]}</span></div>)}
+            {ABC_COLS.map((a) => <div key={a} className="pb-1 text-center text-[12px] font-semibold text-navy-500 dark:text-slate-400">{a} <span className="font-normal text-navy-400 dark:text-slate-500">· {ABC_SUB[a]}</span></div>)}
             {FSN_ROWS.map((f) => (
               <Fragment key={f}>
-                <div className="flex items-center text-[11px] font-semibold text-navy-500 dark:text-slate-400">{f}</div>
+                <div className="flex items-center text-[12.5px] font-semibold text-navy-500 dark:text-slate-400">{f}</div>
                 {ABC_COLS.map((a) => {
                   const c = cellMap[`${f}|${a}`];
                   const sav = c?.savings || 0;
                   return (
                     <button key={a} onClick={() => c?.sku_count && setCell({ fsn: f, abc: a })} disabled={!c?.sku_count}
                       className={`rounded-lg border p-2.5 text-left transition-all ${heat(sav)} ${c?.sku_count ? 'hover:shadow-md hover:ring-1 hover:ring-accent-400/40' : 'opacity-50'}`}>
-                      <div className="text-[20px] font-semibold leading-none tracking-tight">{c?.sku_count || 0}</div>
-                      <div className="mt-0.5 text-[9px] uppercase tracking-wide text-navy-400 dark:text-slate-500">SKUs</div>
-                      <div className="mt-1.5 text-[10px] text-navy-500 dark:text-slate-400">{money(c?.stock_value || 0)}</div>
-                      <div className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">{money(sav)}</div>
-                      {c?.sku_count > 0 && <div className="mt-1 inline-block rounded bg-navy-100 px-1.5 py-0.5 text-[8.5px] font-medium text-navy-500 dark:bg-slate-800 dark:text-slate-400">{ACTION_LABEL[c.action]}</div>}
+                      <div className="text-[21px] font-semibold leading-none tracking-tight">{c?.sku_count || 0}</div>
+                      <div className="mt-0.5 text-[10.5px] uppercase tracking-wide text-navy-400 dark:text-slate-500">SKUs</div>
+                      <div className="mt-1.5 text-[11.5px] text-navy-500 dark:text-slate-400">{money(c?.stock_value || 0)}</div>
+                      <div className="text-[12.5px] font-semibold text-amber-600 dark:text-amber-400">{money(sav)}</div>
+                      {c?.sku_count > 0 && <div className="mt-1 inline-block rounded bg-navy-100 px-1.5 py-0.5 text-[9.5px] font-medium text-navy-500 dark:bg-slate-800 dark:text-slate-400">{ACTION_LABEL[c.action]}</div>}
                     </button>
                   );
                 })}
               </Fragment>
             ))}
           </div>
-          <div className="mt-3 flex items-center gap-3 text-[10px] text-navy-400 dark:text-slate-500">
+          <div className="mt-3 flex items-center gap-3 text-[11.5px] text-navy-400 dark:text-slate-500">
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-rose-500/40" /> high savings</span>
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-amber-500/40" /> medium</span>
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-accent-500/30" /> low</span>
@@ -169,10 +169,10 @@ export default function SavingsWizard({ plantIds }: { plantIds: string[] }) {
 
         {/* Insights */}
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold"><Lightbulb className="h-4 w-4 text-amber-500" /> Insights</div>
+          <div className="mb-2.5 flex items-center gap-1.5 text-[14px] font-semibold"><Lightbulb className="h-4 w-4 text-amber-500" /> Insights</div>
           <div className="space-y-3">
             {(data?.insights || []).map((t: string, i: number) => <Insight key={i} text={t} />)}
-            {!data && <p className="text-[11.5px] text-navy-400 dark:text-slate-500">Analyzing…</p>}
+            {!data && <p className="text-[13px] text-navy-400 dark:text-slate-500">Analyzing…</p>}
           </div>
         </div>
       </div>

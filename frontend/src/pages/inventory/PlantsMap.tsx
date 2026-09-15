@@ -51,8 +51,8 @@ export default function PlantsMap({ selected, embedded }: { selected: string[]; 
     <div className={embedded ? '' : 'px-6 py-5'}>
       {!embedded && (
         <div className="mb-4">
-          <h1 className="text-[19px] font-semibold tracking-tight">Plant Network</h1>
-          <p className="text-[12.5px] text-navy-500 dark:text-slate-500">{PLANTS.length} plants across the globe · marker size = inventory value · colour = service level · click to inspect</p>
+          <h1 className="text-[20px] font-semibold tracking-tight">Plant Network</h1>
+          <p className="text-[14px] text-navy-500 dark:text-slate-500">{PLANTS.length} plants across the globe · marker size = inventory value · colour = service level · click to inspect</p>
         </div>
       )}
 
@@ -85,7 +85,7 @@ export default function PlantsMap({ selected, embedded }: { selected: string[]; 
               );
             })}
           </svg>
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[10.5px] text-navy-500 dark:text-slate-400">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[12px] text-navy-500 dark:text-slate-400">
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full" style={{ background: '#22c55e' }} /> service ≥ 95%</span>
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full" style={{ background: '#f59e0b' }} /> 90–95%</span>
             <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full" style={{ background: '#f43f5e' }} /> &lt; 90%</span>
@@ -97,12 +97,12 @@ export default function PlantsMap({ selected, embedded }: { selected: string[]; 
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
           <div className="flex items-center gap-2">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-500/15 text-accent-600 dark:text-accent-400"><Building2 className="h-4.5 w-4.5" style={{ width: 18, height: 18 }} /></span>
-            <div><div className="text-[14px] font-semibold leading-tight">{sel.name}</div><div className="text-[10.5px] text-navy-400 dark:text-slate-500">{sel.id} · {sel.country} · {sel.region}</div></div>
+            <div><div className="text-[15.5px] font-semibold leading-tight">{sel.name}</div><div className="text-[12px] text-navy-400 dark:text-slate-500">{sel.id} · {sel.country} · {sel.region}</div></div>
           </div>
           <div className="mt-3 flex items-center gap-2 rounded-lg bg-navy-50 px-3 py-2 dark:bg-slate-900/40">
             <span className="h-2.5 w-2.5 rounded-full" style={{ background: svcColor(sel.service_level) }} />
-            <span className="text-[12px] font-medium">Service level</span>
-            <span className="ml-auto text-[15px] font-semibold" style={{ color: svcColor(sel.service_level) }}>{sel.service_level}%</span>
+            <span className="text-[13.5px] font-medium">Service level</span>
+            <span className="ml-auto text-[16.5px] font-semibold" style={{ color: svcColor(sel.service_level) }}>{sel.service_level}%</span>
           </div>
           <div className="mt-2 grid grid-cols-2 gap-2">
             <MiniKpi icon={Building2} label="Inventory value" value={money(sel.inventory)} />
@@ -112,19 +112,19 @@ export default function PlantsMap({ selected, embedded }: { selected: string[]; 
             <MiniKpi icon={TrendingDown} label="Dead stock" value={money(sel.dead)} tone="rose" />
             <MiniKpi icon={Building2} label="Materials" value={String(MATERIALS.filter((m) => m.plant_id === sel.id).length)} />
           </div>
-          {selected.includes(sel.id) && <div className="mt-3 rounded-lg bg-accent-500/5 px-3 py-2 text-[11px] text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">This is one of your assigned plants.</div>}
+          {selected.includes(sel.id) && <div className="mt-3 rounded-lg bg-accent-500/5 px-3 py-2 text-[12.5px] text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">This is one of your assigned plants.</div>}
 
           {/* Opportunities at this plant */}
           <div className="mt-3 border-t border-navy-100 pt-3 dark:border-slate-800">
-            <div className="mb-1.5 flex items-center gap-2"><span className="text-[11px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">Opportunities</span><span className="ml-auto text-[11px] font-semibold text-amber-600 dark:text-amber-400">{money(oppTotal)}</span></div>
+            <div className="mb-1.5 flex items-center gap-2"><span className="text-[12.5px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">Opportunities</span><span className="ml-auto text-[12.5px] font-semibold text-amber-600 dark:text-amber-400">{money(oppTotal)}</span></div>
             <div className="flex flex-col gap-1.5">
               {plantOpps.map((o, i) => (
                 <div key={i} className="flex items-center gap-2 rounded-lg border border-navy-100 px-2.5 py-1.5 dark:border-slate-800">
-                  <div className="min-w-0 flex-1"><div className="truncate text-[11px] font-medium">{o.m.description}</div><div className="text-[9.5px] text-navy-400 dark:text-slate-500">{o.label} · {money(o.savings)}</div></div>
-                  <button onClick={() => actOpp(o)} className="rounded-md bg-accent-500 px-2 py-1 text-[10px] font-semibold text-white hover:bg-accent-600">Act</button>
+                  <div className="min-w-0 flex-1"><div className="truncate text-[12.5px] font-medium">{o.m.description}</div><div className="text-[11px] text-navy-400 dark:text-slate-500">{o.label} · {money(o.savings)}</div></div>
+                  <button onClick={() => actOpp(o)} className="rounded-md bg-accent-500 px-2 py-1 text-[11.5px] font-semibold text-white hover:bg-accent-600">Act</button>
                 </div>
               ))}
-              {plantOpps.length === 0 && <div className="py-2 text-center text-[11px] text-navy-500 dark:text-slate-400">No open opportunities at this plant.</div>}
+              {plantOpps.length === 0 && <div className="py-2 text-center text-[12.5px] text-navy-500 dark:text-slate-400">No open opportunities at this plant.</div>}
             </div>
           </div>
         </div>
@@ -137,8 +137,8 @@ const TONE: Record<string, string> = { amber: 'text-amber-600 dark:text-amber-40
 function MiniKpi({ icon: Icon, label, value, tone }: { icon: typeof Building2; label: string; value: string; tone?: string }) {
   return (
     <div className="rounded-lg border border-navy-100 px-2.5 py-2 dark:border-slate-800">
-      <div className="flex items-center gap-1.5 text-[9.5px] uppercase tracking-wide text-navy-400 dark:text-slate-500"><Icon className="h-3 w-3" />{label}</div>
-      <div className={`mt-0.5 text-[15px] font-semibold ${tone ? TONE[tone] : ''}`}>{value}</div>
+      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-navy-400 dark:text-slate-500"><Icon className="h-3 w-3" />{label}</div>
+      <div className={`mt-0.5 text-[16.5px] font-semibold ${tone ? TONE[tone] : ''}`}>{value}</div>
     </div>
   );
 }

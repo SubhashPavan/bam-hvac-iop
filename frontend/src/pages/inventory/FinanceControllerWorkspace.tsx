@@ -36,8 +36,8 @@ export default function FinanceControllerWorkspace({ persona, onPersona }: { per
       <div className="flex h-screen overflow-hidden bg-navy-50 font-sans text-navy-900 dark:bg-[#14111f] dark:text-slate-100">
         <nav className={`flex shrink-0 flex-col gap-1 overflow-hidden border-r border-navy-100 bg-white py-3 transition-[width] duration-200 dark:border-slate-800/70 dark:bg-[#1b1730] ${navOpen ? 'w-[212px] items-stretch px-2.5' : 'w-[52px] items-center'}`}>
           <div className={`mb-3 flex items-center ${navOpen ? 'w-full gap-2' : 'flex-col gap-2'}`}>
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-500 text-[11px] font-bold text-white">IO</div>
-            {navOpen && <div className="min-w-0 flex-1 text-[12px] font-semibold leading-tight">Inventory Optimization</div>}
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-500 text-[12.5px] font-bold text-white">IO</div>
+            {navOpen && <div className="min-w-0 flex-1 text-[13.5px] font-semibold leading-tight">Inventory Optimization</div>}
             <button onClick={() => setNavOpen((v) => !v)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-navy-400 hover:bg-navy-50 dark:text-slate-500 dark:hover:bg-slate-800"><PanelLeft style={{ width: 16, height: 16 }} /></button>
           </div>
           <NavIcon icon={LayoutDashboard} active={view === 'dashboard'} onClick={() => setView('dashboard')} label="Dashboard" expanded={navOpen} />
@@ -46,23 +46,23 @@ export default function FinanceControllerWorkspace({ persona, onPersona }: { per
           <NavIcon icon={Landmark} active={view === 'financials'} onClick={() => setView('financials')} label="Financials" expanded={navOpen} />
           <NavIcon icon={Workflow} active={view === 'workflow'} onClick={() => setView('workflow')} label="Workflow" expanded={navOpen} />
           <div className={`mt-auto flex flex-col gap-1 ${navOpen ? 'items-stretch' : 'items-center'}`}>
-            <button onClick={() => setDark((v) => !v)} className={`flex items-center rounded-lg text-navy-400 hover:bg-navy-50 dark:text-slate-400 dark:hover:bg-slate-800 ${navOpen ? 'h-9 w-full gap-2.5 px-2.5' : 'h-9 w-9 justify-center'}`}>{dark ? <Sun style={{ width: 18, height: 18 }} className="shrink-0" /> : <Moon style={{ width: 18, height: 18 }} className="shrink-0" />}{navOpen && <span className="text-[12.5px] font-medium">{dark ? 'Light mode' : 'Dark mode'}</span>}</button>
-            <button onClick={() => navigate('/accelerators')} className={`flex items-center rounded-lg text-navy-400 hover:bg-navy-50 dark:text-slate-400 dark:hover:bg-slate-800 ${navOpen ? 'h-9 w-full gap-2.5 px-2.5' : 'h-9 w-9 justify-center'}`}><LogOut style={{ width: 18, height: 18 }} className="shrink-0" />{navOpen && <span className="text-[12.5px] font-medium">Exit accelerator</span>}</button>
+            <button onClick={() => setDark((v) => !v)} className={`flex items-center rounded-lg text-navy-400 hover:bg-navy-50 dark:text-slate-400 dark:hover:bg-slate-800 ${navOpen ? 'h-9 w-full gap-2.5 px-2.5' : 'h-9 w-9 justify-center'}`}>{dark ? <Sun style={{ width: 18, height: 18 }} className="shrink-0" /> : <Moon style={{ width: 18, height: 18 }} className="shrink-0" />}{navOpen && <span className="text-[14px] font-medium">{dark ? 'Light mode' : 'Dark mode'}</span>}</button>
+            <button onClick={() => navigate('/accelerators')} className={`flex items-center rounded-lg text-navy-400 hover:bg-navy-50 dark:text-slate-400 dark:hover:bg-slate-800 ${navOpen ? 'h-9 w-full gap-2.5 px-2.5' : 'h-9 w-9 justify-center'}`}><LogOut style={{ width: 18, height: 18 }} className="shrink-0" />{navOpen && <span className="text-[14px] font-medium">Exit accelerator</span>}</button>
           </div>
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="relative flex h-13 shrink-0 items-center gap-3 border-b border-navy-100 px-5 py-3 dark:border-slate-800/70">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-accent-400 to-accent-600 text-[10px] font-bold text-white shadow-sm shadow-accent-500/30">IO</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-accent-400 to-accent-600 text-[11.5px] font-bold text-white shadow-sm shadow-accent-500/30">IO</span>
               <div className="leading-tight">
-                <div className="text-[13px] font-semibold tracking-tight">Inventory Optimization</div>
-                <div className="text-[8.5px] font-semibold uppercase tracking-[0.16em] text-accent-600 dark:text-accent-400">Finance Controller · Stage 3</div>
+                <div className="text-[14.5px] font-semibold tracking-tight">Inventory Optimization</div>
+                <div className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-accent-600 dark:text-accent-400">Finance Controller · Stage 3</div>
               </div>
             </div>
             <span className="mx-1 hidden h-5 w-px bg-navy-200 dark:bg-slate-700 sm:block" />
-            <span className="hidden text-[13px] font-medium capitalize text-navy-500 dark:text-slate-400 sm:block">{view === 'approvals' ? 'Sign-offs' : view === 'writeoffs' ? 'Write-offs' : view}</span>
-            <span className="ml-auto rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-[12px] dark:border-slate-700 dark:bg-slate-900">Global · all regions</span>
+            <span className="hidden text-[14.5px] font-medium capitalize text-navy-500 dark:text-slate-400 sm:block">{view === 'approvals' ? 'Sign-offs' : view === 'writeoffs' ? 'Write-offs' : view}</span>
+            <span className="ml-auto rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-[13.5px] dark:border-slate-700 dark:bg-slate-900">Global · all regions</span>
           </header>
 
           <main className="custom-scrollbar flex-1 overflow-y-auto">
@@ -96,8 +96,8 @@ function FinanceDashboard({ onNavigate }: { onNavigate: (v: View) => void }) {
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <div className="text-[11.5px] text-navy-500 dark:text-slate-400">Financial control · <span className="font-medium text-accent-600 dark:text-accent-400">{incoming.length} requests awaiting sign-off</span></div>
-        <div className="text-[20px] font-semibold tracking-tight">Finance Controller cockpit</div>
+        <div className="text-[13px] text-navy-500 dark:text-slate-400">Financial control · <span className="font-medium text-accent-600 dark:text-accent-400">{incoming.length} requests awaiting sign-off</span></div>
+        <div className="text-[21px] font-semibold tracking-tight">Finance Controller cockpit</div>
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-6">
@@ -112,19 +112,19 @@ function FinanceDashboard({ onNavigate }: { onNavigate: (v: View) => void }) {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Panel title="Incoming for sign-off" sub={`${incoming.length} approved by Maintenance, awaiting finance`}>
           {incoming.length === 0 ? (
-            <div className="py-8 text-center text-[12.5px] text-navy-500 dark:text-slate-400">Nothing awaiting sign-off. Requests appear here once Maintenance approves them.</div>
+            <div className="py-8 text-center text-[14px] text-navy-500 dark:text-slate-400">Nothing awaiting sign-off. Requests appear here once Maintenance approves them.</div>
           ) : (
             <div className="flex flex-col gap-1.5">
               {incoming.slice(0, 8).map((r) => (
                 <div key={r.id} className="flex flex-wrap items-center gap-2 rounded-lg border border-navy-100 px-3 py-2 dark:border-slate-800">
-                  <span className="rounded-full bg-accent-500/10 px-2 py-0.5 text-[9.5px] font-semibold text-accent-700 dark:text-accent-300">{ACTION_LABEL[r.kind]}</span>
-                  <div className="min-w-0 flex-1"><div className="truncate text-[12px] font-medium">{r.materialDesc}</div><div className="text-[10px] text-navy-400 dark:text-slate-500">{r.plantId} · saves {money(r.savings)} · releases {money(r.cashRelease)}</div></div>
-                  <button onClick={() => decide(r.id, 'approved', actor)} className="inline-flex items-center gap-1 rounded-md bg-emerald-500 px-2.5 py-1.5 text-[10.5px] font-semibold text-white hover:bg-emerald-600"><Check className="h-3 w-3" /> Sign off</button>
+                  <span className="rounded-full bg-accent-500/10 px-2 py-0.5 text-[11px] font-semibold text-accent-700 dark:text-accent-300">{ACTION_LABEL[r.kind]}</span>
+                  <div className="min-w-0 flex-1"><div className="truncate text-[13.5px] font-medium">{r.materialDesc}</div><div className="text-[11.5px] text-navy-400 dark:text-slate-500">{r.plantId} · saves {money(r.savings)} · releases {money(r.cashRelease)}</div></div>
+                  <button onClick={() => decide(r.id, 'approved', actor)} className="inline-flex items-center gap-1 rounded-md bg-emerald-500 px-2.5 py-1.5 text-[12px] font-semibold text-white hover:bg-emerald-600"><Check className="h-3 w-3" /> Sign off</button>
                   <button onClick={() => sendBack(r.id, actor)} className="rounded-md bg-amber-500/15 p-1.5 text-amber-600 hover:bg-amber-500/25 dark:text-amber-400" aria-label="Send back"><CornerUpLeft className="h-3.5 w-3.5" /></button>
                   <button onClick={() => decide(r.id, 'rejected', actor)} className="rounded-md bg-rose-500/15 p-1.5 text-rose-600 hover:bg-rose-500/25 dark:text-rose-400" aria-label="Reject"><X className="h-3.5 w-3.5" /></button>
                 </div>
               ))}
-              <button onClick={() => onNavigate('approvals')} className="mt-1 text-[11.5px] font-medium text-accent-600 hover:underline dark:text-accent-400">Open full queue →</button>
+              <button onClick={() => onNavigate('approvals')} className="mt-1 text-[13px] font-medium text-accent-600 hover:underline dark:text-accent-400">Open full queue →</button>
             </div>
           )}
         </Panel>
@@ -178,30 +178,30 @@ function WriteOffs({ mats }: { mats: typeof MATERIALS }) {
   return (
     <div className="px-6 py-5">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div><h1 className="text-[19px] font-semibold tracking-tight">Write-offs</h1><p className="text-[12.5px] text-navy-500 dark:text-slate-500">{dead.length} non-moving items · {money(total)} obsolescence exposure · 50% typically recoverable via disposal</p></div>
+        <div><h1 className="text-[20px] font-semibold tracking-tight">Write-offs</h1><p className="text-[14px] text-navy-500 dark:text-slate-500">{dead.length} non-moving items · {money(total)} obsolescence exposure · 50% typically recoverable via disposal</p></div>
         <div className="flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1.5 dark:border-slate-700 dark:bg-slate-900">
           <Search className="h-3.5 w-3.5 text-navy-400" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="w-48 border-none bg-transparent text-[12.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="w-48 border-none bg-transparent text-[14px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
         </div>
       </div>
       <div className="overflow-hidden rounded-xl border border-navy-100 dark:border-slate-800">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-[12px]">
+          <table className="w-full min-w-[720px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-navy-100 bg-navy-50/60 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-500">
+              <tr className="border-b border-navy-100 bg-navy-50/60 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-500">
                 <th className="px-4 py-2.5 font-semibold">Material</th><th className="px-3 py-2.5 font-semibold">Plant</th><th className="px-3 py-2.5 text-right font-semibold">Book value</th><th className="px-3 py-2.5 text-right font-semibold">Write-off</th><th className="px-3 py-2.5 text-right font-semibold">Recoverable</th><th className="px-4 py-2.5 text-right font-semibold">Action</th>
               </tr>
             </thead>
             <tbody>
               {shown.slice(0, 40).map((m) => (
                 <tr key={m.id} className="border-b border-navy-50 last:border-0 hover:bg-navy-50/50 dark:border-slate-800/60 dark:bg-[#211c33] dark:hover:bg-slate-800/30">
-                  <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id} · {m.supplier}</div></td>
+                  <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · {m.supplier}</div></td>
                   <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{m.plant_id}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{money(m.current_stock_value)}</td>
                   <td className="px-3 py-2.5 text-right text-rose-600 dark:text-rose-400">{money(Math.round(m.current_stock_value * 0.5))}</td>
                   <td className="px-3 py-2.5 text-right font-semibold text-emerald-600 dark:text-emerald-400">{money(Math.round(m.current_stock_value * 0.5))}</td>
                   <td className="px-4 py-2.5 text-right">
-                    <button onClick={() => openAction({ materialId: m.id, materialDesc: m.description, plantId: m.plant_id, kind: 'dispose', currentValue: m.current_stock_value, proposedValue: 0, savings: Math.round(m.current_stock_value * 0.5), cashRelease: Math.round(m.current_stock_value * 0.5), justification: 'Obsolete (non-moving) — approve write-off / disposal.' })} className="rounded-md bg-rose-500 px-2.5 py-1.5 text-[11px] font-semibold text-white hover:bg-rose-600">Approve write-off</button>
+                    <button onClick={() => openAction({ materialId: m.id, materialDesc: m.description, plantId: m.plant_id, kind: 'dispose', currentValue: m.current_stock_value, proposedValue: 0, savings: Math.round(m.current_stock_value * 0.5), cashRelease: Math.round(m.current_stock_value * 0.5), justification: 'Obsolete (non-moving) — approve write-off / disposal.' })} className="rounded-md bg-rose-500 px-2.5 py-1.5 text-[12.5px] font-semibold text-white hover:bg-rose-600">Approve write-off</button>
                   </td>
                 </tr>
               ))}
@@ -219,7 +219,7 @@ function Financials() {
   const ft = useMemo(() => financeTotals(), []);
   return (
     <div className="px-6 py-5">
-      <div className="mb-4"><h1 className="text-[19px] font-semibold tracking-tight">Financials</h1><p className="text-[12.5px] text-navy-500 dark:text-slate-500">Working-capital release, savings and ROI across the network</p></div>
+      <div className="mb-4"><h1 className="text-[20px] font-semibold tracking-tight">Financials</h1><p className="text-[14px] text-navy-500 dark:text-slate-500">Working-capital release, savings and ROI across the network</p></div>
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Kpi icon={Wallet} tone="mint" value={money(ft.wc_release)} label="Working capital release" sub="program total" />
         <Kpi icon={Coins} tone="amber" value={money(ft.savings)} label="Savings identified" sub="all regions" />
@@ -228,9 +228,9 @@ function Financials() {
       </div>
       <Panel title="Regional finance rollup">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-[12px]">
+          <table className="w-full min-w-[640px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+              <tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                 <th className="px-3 py-2 font-semibold">Region</th><th className="px-3 py-2 text-right font-semibold">Inventory</th><th className="px-3 py-2 text-right font-semibold">Savings</th><th className="px-3 py-2 text-right font-semibold">WC release</th><th className="px-3 py-2 text-right font-semibold">Cash benefit</th><th className="px-3 py-2 text-right font-semibold">ROI</th><th className="px-3 py-2 font-semibold">Priority</th>
               </tr>
             </thead>
@@ -243,7 +243,7 @@ function Financials() {
                   <td className="px-3 py-2 text-right tabular-nums text-emerald-600 dark:text-emerald-400">{money(r.wc_release)}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{money(r.cash_benefit)}</td>
                   <td className="px-3 py-2 text-right">{r.roi}×</td>
-                  <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${r.priority === 'High' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : r.priority === 'Medium' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-navy-100 text-navy-500 dark:bg-slate-800 dark:text-slate-400'}`}>{r.priority}</span></td>
+                  <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-[11.5px] font-semibold ${r.priority === 'High' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : r.priority === 'Medium' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-navy-100 text-navy-500 dark:bg-slate-800 dark:text-slate-400'}`}>{r.priority}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -258,7 +258,7 @@ function Financials() {
 function NavIcon({ icon: Icon, active, onClick, label, expanded }: { icon: typeof LayoutDashboard; active: boolean; onClick: () => void; label: string; expanded?: boolean }) {
   return (
     <button onClick={onClick} title={expanded ? undefined : label} className={`flex items-center rounded-lg ${expanded ? 'h-9 w-full gap-2.5 px-2.5' : 'h-9 w-9 justify-center'} ${active ? 'bg-accent-500/10 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300' : 'text-navy-400 hover:bg-navy-50 dark:text-slate-500 dark:hover:bg-slate-800'}`}>
-      <Icon style={{ width: 19, height: 19 }} className="shrink-0" />{expanded && <span className="truncate text-[12.5px] font-medium">{label}</span>}
+      <Icon style={{ width: 19, height: 19 }} className="shrink-0" />{expanded && <span className="truncate text-[14px] font-medium">{label}</span>}
     </button>
   );
 }
@@ -267,16 +267,16 @@ function Kpi({ icon: Icon, tone, value, label, sub }: { icon: typeof Inbox; tone
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3.5 dark:border-slate-800 dark:bg-[#211c33]">
       <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${TONE[tone]}`}><Icon className="h-4 w-4" /></span>
-      <div className="mt-2.5 text-[20px] font-semibold leading-none tracking-tight">{value}</div>
-      <div className="mt-1.5 text-[11px] font-medium">{label}</div>
-      <div className="text-[10px] text-navy-400 dark:text-slate-500">{sub}</div>
+      <div className="mt-2.5 text-[21px] font-semibold leading-none tracking-tight">{value}</div>
+      <div className="mt-1.5 text-[12.5px] font-medium">{label}</div>
+      <div className="text-[11.5px] text-navy-400 dark:text-slate-500">{sub}</div>
     </div>
   );
 }
 function Panel({ title, sub, children, className }: { title: string; sub?: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33] ${className || ''}`}>
-      <div className="mb-3 flex flex-wrap items-baseline gap-x-2"><span className="text-[12.5px] font-semibold">{title}</span>{sub && <span className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-2"><span className="text-[14px] font-semibold">{title}</span>{sub && <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
       {children}
     </div>
   );

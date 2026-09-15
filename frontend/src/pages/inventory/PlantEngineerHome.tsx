@@ -45,30 +45,30 @@ export default function PlantEngineerHome() {
     <div className="min-h-full bg-navy-50 dark:bg-[#14111f]">
       {/* Plant selector */}
       <div className="flex flex-wrap items-center gap-3 border-b border-navy-100 bg-white px-6 py-3 dark:border-slate-800 dark:bg-[#1b1730]">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-400 dark:text-slate-600">My plants</span>
+        <span className="text-[12.5px] font-semibold uppercase tracking-[0.1em] text-navy-400 dark:text-slate-600">My plants</span>
         <div className="flex flex-wrap gap-1.5">
           {myPlants.map((p) => {
             const on = selected.includes(p.id);
             return (
               <button key={p.id} onClick={() => toggle(p.id)}
-                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${on ? 'border-accent-400 bg-accent-500/10 text-accent-700 dark:border-accent-500 dark:text-accent-300' : 'border-navy-200 bg-white text-navy-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400'}`}>
+                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[13.5px] font-medium transition-colors ${on ? 'border-accent-400 bg-accent-500/10 text-accent-700 dark:border-accent-500 dark:text-accent-300' : 'border-navy-200 bg-white text-navy-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400'}`}>
                 {on && <Check className="h-3 w-3" />}{p.name} · {p.id}
               </button>
             );
           })}
         </div>
-        <span className="ml-auto text-[11px] text-navy-400 dark:text-slate-500">{selected.length} of {myPlants.length} · {mats.length} materials</span>
+        <span className="ml-auto text-[12.5px] text-navy-400 dark:text-slate-500">{selected.length} of {myPlants.length} · {mats.length} materials</span>
       </div>
 
       {/* Identity + per-plant service level */}
       <div className="flex flex-wrap items-start gap-4 border-b border-navy-100 bg-white px-6 py-4 dark:border-slate-800 dark:bg-[#1b1730]">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500/10 text-accent-600 dark:text-accent-400"><Building2 className="h-6 w-6" /></div>
         <div className="flex-1">
-          <div className="text-[18px] font-semibold">{selected.length === 1 ? plantName(selected[0]) : `${selected.length} plants`} · India</div>
-          <div className="text-[12px] text-navy-500 dark:text-slate-400">Viewing {selected.map(plantName).join(' + ')}</div>
+          <div className="text-[19.5px] font-semibold">{selected.length === 1 ? plantName(selected[0]) : `${selected.length} plants`} · India</div>
+          <div className="text-[13.5px] text-navy-500 dark:text-slate-400">Viewing {selected.map(plantName).join(' + ')}</div>
         </div>
         <div className="min-w-[240px]">
-          <div className="mb-1.5 text-right text-[10.5px] uppercase tracking-[0.1em] text-navy-400 dark:text-slate-500">Service level · per plant</div>
+          <div className="mb-1.5 text-right text-[12px] uppercase tracking-[0.1em] text-navy-400 dark:text-slate-500">Service level · per plant</div>
           <div className="flex flex-col gap-1.5">
             {selected.map((id) => {
               const p = PLANTS.find((x) => x.id === id)!;
@@ -76,9 +76,9 @@ export default function PlantEngineerHome() {
               const txt = p.service_level < 90 ? 'text-rose-600 dark:text-rose-400' : p.service_level < 95 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
               return (
                 <div key={id} className="flex items-center gap-2">
-                  <span className="w-14 text-[11px] text-navy-500 dark:text-slate-400">{p.name}</span>
+                  <span className="w-14 text-[12.5px] text-navy-500 dark:text-slate-400">{p.name}</span>
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-navy-100 dark:bg-slate-800"><span className={`block h-full ${tone}`} style={{ width: `${p.service_level}%` }} /></span>
-                  <span className={`w-8 text-right text-[11px] font-semibold ${txt}`}>{p.service_level}%</span>
+                  <span className={`w-8 text-right text-[12.5px] font-semibold ${txt}`}>{p.service_level}%</span>
                 </div>
               );
             })}
@@ -88,7 +88,7 @@ export default function PlantEngineerHome() {
 
       <div className="px-6 py-5">
         {/* Needs you today */}
-        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Needs you today · across {selected.length} plant{selected.length > 1 ? 's' : ''}</div>
+        <div className="mb-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Needs you today · across {selected.length} plant{selected.length > 1 ? 's' : ''}</div>
         <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <ActionCard onClick={() => navigate(`${BASE}/review`)} icon={Inbox} tone="accent" value={String(toReview.length)} label="Recommendations to review" sub={`${money(toReviewSavings)} savings potential`} />
           <ActionCard onClick={() => navigate(`${BASE}/review`)} icon={AlertTriangle} tone="danger" value={String(emergencies.length)} label="Emergency actions"
@@ -99,7 +99,7 @@ export default function PlantEngineerHome() {
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           {/* Combined health */}
           <div>
-            <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Combined health</div>
+            <div className="mb-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Combined health</div>
             <div className="grid grid-cols-2 gap-3">
               <Kpi value={money(inventory)} label="Plant Inventory" />
               <Kpi value={String(critical.length)} label="Critical Spares · score >70" />
@@ -111,18 +111,18 @@ export default function PlantEngineerHome() {
           {/* Critical spares list */}
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Critical spares</span>
-              <span className="text-[11px] text-accent-600 dark:text-accent-400">all →</span>
+              <span className="text-[12.5px] font-semibold uppercase tracking-[0.12em] text-navy-400 dark:text-slate-600">Critical spares</span>
+              <span className="text-[12.5px] text-accent-600 dark:text-accent-400">all →</span>
             </div>
             <div className="space-y-1.5">
               {watchlist.map((m) => (
                 <div key={m.id} className="flex items-center gap-3 rounded-lg bg-white px-3 py-2 dark:bg-[#211c33]">
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[12px] font-medium">{m.description}</div>
-                    <div className="text-[10px] text-navy-400 dark:text-slate-500">{m.id} · <span className="text-accent-600 dark:text-accent-400">{plantName(m.plant_id)}</span></div>
+                    <div className="truncate text-[13.5px] font-medium">{m.description}</div>
+                    <div className="text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · <span className="text-accent-600 dark:text-accent-400">{plantName(m.plant_id)}</span></div>
                   </div>
-                  <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${VED_TONE[m.ved]}`}>{m.ved}</span>
-                  <div className="w-11 text-right"><div className="text-[13px] font-semibold">{m.criticality_score}</div><div className="text-[9px] text-navy-400 dark:text-slate-500">/100</div></div>
+                  <span className={`rounded px-1.5 py-0.5 text-[11.5px] font-semibold ${VED_TONE[m.ved]}`}>{m.ved}</span>
+                  <div className="w-11 text-right"><div className="text-[14.5px] font-semibold">{m.criticality_score}</div><div className="text-[10.5px] text-navy-400 dark:text-slate-500">/100</div></div>
                 </div>
               ))}
             </div>
@@ -133,7 +133,7 @@ export default function PlantEngineerHome() {
       {/* Ask */}
       <div className="flex items-center gap-2 border-t border-navy-100 bg-white px-6 py-3 dark:border-slate-800 dark:bg-[#1b1730]">
         <Sparkles className="h-4 w-4 text-accent-500" />
-        <button onClick={() => navigate(`${BASE}/ask`)} className="text-[12px] text-navy-500 hover:text-navy-800 dark:text-slate-400 dark:hover:text-slate-200">Ask about your plants — “which slow movers can I safely reduce at {plantName(selected[selected.length - 1])}?”</button>
+        <button onClick={() => navigate(`${BASE}/ask`)} className="text-[13.5px] text-navy-500 hover:text-navy-800 dark:text-slate-400 dark:hover:text-slate-200">Ask about your plants — “which slow movers can I safely reduce at {plantName(selected[selected.length - 1])}?”</button>
       </div>
     </div>
   );
@@ -151,9 +151,9 @@ function ActionCard({ onClick, icon: Icon, tone, value, label, sub }: { onClick:
         <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${styles.chip}`}><Icon className="h-4 w-4" /></span>
         <ArrowRight className={`h-4 w-4 ${styles.arrow}`} />
       </div>
-      <div className={`mt-2 text-[24px] font-semibold ${styles.val}`}>{value}</div>
-      <div className={`text-[12px] font-medium ${styles.lab}`}>{label}</div>
-      <div className={`text-[11px] ${styles.sub}`}>{sub}</div>
+      <div className={`mt-2 text-[26px] font-semibold ${styles.val}`}>{value}</div>
+      <div className={`text-[13.5px] font-medium ${styles.lab}`}>{label}</div>
+      <div className={`text-[12.5px] ${styles.sub}`}>{sub}</div>
     </button>
   );
 }
@@ -162,8 +162,8 @@ function Kpi({ value, label, tone }: { value: string; label: string; tone?: 'war
   const c = tone === 'warn' ? 'text-amber-600 dark:text-amber-400' : tone === 'danger' ? 'text-rose-600 dark:text-rose-400' : '';
   return (
     <div className="rounded-xl bg-white p-4 dark:bg-[#211c33]">
-      <div className={`text-[20px] font-semibold ${c}`}>{value}</div>
-      <div className="text-[11px] text-navy-500 dark:text-slate-400">{label}</div>
+      <div className={`text-[21px] font-semibold ${c}`}>{value}</div>
+      <div className="text-[12.5px] text-navy-500 dark:text-slate-400">{label}</div>
     </div>
   );
 }

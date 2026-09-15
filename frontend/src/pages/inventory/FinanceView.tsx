@@ -26,8 +26,8 @@ export default function FinanceView() {
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="text-[19px] font-semibold tracking-tight">Finance Dashboard</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">Working capital · Cash release · ROI · NPV</p>
+        <h1 className="text-[20px] font-semibold tracking-tight">Finance Dashboard</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">Working capital · Cash release · ROI · NPV</p>
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -39,7 +39,7 @@ export default function FinanceView() {
 
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2 text-[13px] font-semibold">3-Year ROI Projection</div>
+          <div className="mb-2 text-[14.5px] font-semibold">3-Year ROI Projection</div>
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={roiData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
@@ -55,7 +55,7 @@ export default function FinanceView() {
           </div>
         </div>
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2 text-[13px] font-semibold">Cumulative Cash Release</div>
+          <div className="mb-2 text-[14.5px] font-semibold">Cumulative Cash Release</div>
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={cashData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
@@ -71,11 +71,11 @@ export default function FinanceView() {
       </div>
 
       <div className="rounded-xl border border-navy-100 bg-white dark:border-slate-800 dark:bg-[#211c33]">
-        <div className="border-b border-navy-100 px-4 py-3 text-[13px] font-semibold dark:border-slate-800">Regional Working Capital Release</div>
+        <div className="border-b border-navy-100 px-4 py-3 text-[14.5px] font-semibold dark:border-slate-800">Regional Working Capital Release</div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-[12.5px]">
+          <table className="w-full min-w-[720px] text-[14px]">
             <thead>
-              <tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+              <tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                 <th className="px-4 py-2.5 font-semibold">Region</th>
                 <th className="px-3 py-2.5 text-right font-semibold">Total Inventory</th>
                 <th className="px-3 py-2.5 text-right font-semibold">Savings Identified</th>
@@ -94,7 +94,7 @@ export default function FinanceView() {
                   <td className="px-3 py-2.5 text-right text-emerald-600 dark:text-emerald-400">{money(r.wc_release)}</td>
                   <td className="px-3 py-2.5 text-right text-emerald-600 dark:text-emerald-400">{money(r.cash_benefit)}</td>
                   <td className="px-3 py-2.5 text-right text-sky-600 dark:text-sky-400">{r.roi}×</td>
-                  <td className="px-4 py-2.5 text-center"><span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${PRIORITY_TONE[r.priority]}`}>{r.priority}</span></td>
+                  <td className="px-4 py-2.5 text-center"><span className={`rounded-full px-2 py-0.5 text-[11.5px] font-semibold ${PRIORITY_TONE[r.priority]}`}>{r.priority}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -115,9 +115,9 @@ function Kpi({ icon: Icon, tone, value, label, sub }: { icon: typeof DollarSign;
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
       <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${TONE[tone]}`}><Icon className="h-4 w-4" /></span>
-      <div className="mt-3 text-[24px] font-semibold leading-none">{value}</div>
-      <div className="mt-1.5 text-[12px] font-medium">{label}</div>
-      <div className="text-[10.5px] text-navy-400 dark:text-slate-500">{sub}</div>
+      <div className="mt-3 text-[26px] font-semibold leading-none">{value}</div>
+      <div className="mt-1.5 text-[13.5px] font-medium">{label}</div>
+      <div className="text-[12px] text-navy-400 dark:text-slate-500">{sub}</div>
     </div>
   );
 }

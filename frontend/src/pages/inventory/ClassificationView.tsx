@@ -20,12 +20,12 @@ export default function ClassificationView({ selected }: { selected: string[] })
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="text-[19px] font-semibold tracking-tight">Inventory Classification</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">Segment by value, demand variability, movement, criticality — and track policy performance</p>
+        <h1 className="text-[20px] font-semibold tracking-tight">Inventory Classification</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">Segment by value, demand variability, movement, criticality — and track policy performance</p>
       </div>
       <div className="mb-4 flex flex-wrap gap-1.5">
         {DIMS.map((d) => (
-          <button key={d.k} onClick={() => setDim(d.k)} className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold ${dim === d.k ? 'bg-accent-500 text-white' : 'bg-navy-100 text-navy-600 hover:bg-navy-200 dark:bg-slate-800 dark:text-slate-300'}`}>{d.label}</button>
+          <button key={d.k} onClick={() => setDim(d.k)} className={`rounded-lg px-3.5 py-1.5 text-[14px] font-semibold ${dim === d.k ? 'bg-accent-500 text-white' : 'bg-navy-100 text-navy-600 hover:bg-navy-200 dark:bg-slate-800 dark:text-slate-300'}`}>{d.label}</button>
         ))}
       </div>
       {dim === 'performance' ? <Performance selected={selected} /> : <DimView key={dim} dim={dim} selected={selected} />}
@@ -53,7 +53,7 @@ function DimView({ dim, selected }: { dim: ClassDim; selected: string[] }) {
           </div>
           <div className="mt-1 flex flex-col gap-1">
             {buckets.map((b, i) => (
-              <button key={b.key} onClick={() => setSel(b.key)} className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] ${sel === b.key ? 'bg-accent-500/10' : 'hover:bg-navy-50 dark:hover:bg-slate-800'}`}>
+              <button key={b.key} onClick={() => setSel(b.key)} className={`flex items-center gap-2 rounded-md px-2 py-1 text-[12.5px] ${sel === b.key ? 'bg-accent-500/10' : 'hover:bg-navy-50 dark:hover:bg-slate-800'}`}>
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
                 <span className="flex-1 text-left">{b.label}</span>
                 <span className="font-medium tabular-nums">{money(b.value)}</span>
@@ -81,12 +81,12 @@ function DimView({ dim, selected }: { dim: ClassDim; selected: string[] }) {
       <Panel title={`${active?.label || ''} — materials`} sub={`${active?.count || 0} SKUs · ${money(active?.value || 0)}`}>
         <div className="mb-2 flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900 sm:w-64">
           <Search className="h-3.5 w-3.5 text-navy-400" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search this class…" className="w-full border-none bg-transparent text-[12px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search this class…" className="w-full border-none bg-transparent text-[13.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-[12px]">
+          <table className="w-full min-w-[640px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+              <tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                 <th className="px-3 py-2 font-semibold">Material</th><th className="px-3 py-2 font-semibold">Plant</th>
                 <th className="px-3 py-2 font-semibold">XYZ/FSN/VED</th><th className="px-3 py-2 text-right font-semibold">Cover</th>
                 <th className="px-3 py-2 text-right font-semibold">Crit</th><th className="px-3 py-2 text-right font-semibold">Value</th>
@@ -95,7 +95,7 @@ function DimView({ dim, selected }: { dim: ClassDim; selected: string[] }) {
             <tbody>
               {activeItems.slice(0, 25).map((m: Material) => (
                 <tr key={m.id} className="border-b border-navy-50 last:border-0 dark:border-slate-800/60">
-                  <td className="px-3 py-2"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id}</div></td>
+                  <td className="px-3 py-2"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id}</div></td>
                   <td className="px-3 py-2 text-navy-500 dark:text-slate-400">{m.plant_id}</td>
                   <td className="px-3 py-2 text-navy-500 dark:text-slate-400">{m.xyz} · {m.fsn} · {m.ved}</td>
                   <td className="px-3 py-2 text-right">{m.coverage_days}d</td>
@@ -135,18 +135,18 @@ function Performance({ selected }: { selected: string[] }) {
 
   return (
     <div>
-      <div className="mb-2 text-[12px] text-navy-500 dark:text-slate-400">Policy performance scorecard across your selected plants.</div>
+      <div className="mb-2 text-[13.5px] text-navy-500 dark:text-slate-400">Policy performance scorecard across your selected plants.</div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
           <div key={c.label} className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
             <div className="flex items-baseline justify-between">
-              <span className="text-[12px] font-medium text-navy-500 dark:text-slate-400">{c.label}</span>
-              <span className={`text-[20px] font-semibold ${c.good ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>{c.value}</span>
+              <span className="text-[13.5px] font-medium text-navy-500 dark:text-slate-400">{c.label}</span>
+              <span className={`text-[21px] font-semibold ${c.good ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>{c.value}</span>
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-navy-100 dark:bg-slate-800">
               <span className={`block h-full rounded-full ${c.good ? 'bg-emerald-500' : 'bg-amber-500'}`} style={{ width: `${Math.min(100, Math.max(4, c.pct))}%` }} />
             </div>
-            <div className="mt-1 text-[10px] text-navy-400 dark:text-slate-500">{c.target}</div>
+            <div className="mt-1 text-[11.5px] text-navy-400 dark:text-slate-500">{c.target}</div>
           </div>
         ))}
       </div>
@@ -157,7 +157,7 @@ function Performance({ selected }: { selected: string[] }) {
 function Panel({ title, sub, children, className }: { title: string; sub?: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33] ${className || ''}`}>
-      <div className="mb-3 flex flex-wrap items-baseline gap-x-2"><span className="text-[12.5px] font-semibold">{title}</span>{sub && <span className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-2"><span className="text-[14px] font-semibold">{title}</span>{sub && <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
       {children}
     </div>
   );

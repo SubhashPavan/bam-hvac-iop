@@ -66,56 +66,56 @@ export default function PlantWorkspace({ plantIds, onOpen }: { plantIds: string[
       {/* header + run badge */}
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-[19px] font-semibold tracking-tight"><Layers className="h-5 w-5 text-accent-500" /> Analysis workspace</h1>
-          <p className="text-[12.5px] text-navy-500 dark:text-slate-500">{mats.length} materials classified · demand patterns → policy (safety stock, reorder point, ROQ). Click any material for the full analysis.</p>
+          <h1 className="flex items-center gap-2 text-[20px] font-semibold tracking-tight"><Layers className="h-5 w-5 text-accent-500" /> Analysis workspace</h1>
+          <p className="text-[14px] text-navy-500 dark:text-slate-500">{mats.length} materials classified · demand patterns → policy (safety stock, reorder point, ROQ). Click any material for the full analysis.</p>
         </div>
         <div className="flex items-center gap-2 rounded-xl border border-navy-100 bg-white px-3 py-2 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="text-[10.5px] leading-tight text-navy-500 dark:text-slate-400">
+          <div className="text-[12px] leading-tight text-navy-500 dark:text-slate-400">
             <div>Last run <b className="text-navy-800 dark:text-slate-200">{fmt(lastRun)}</b></div>
             <div>Next (weekly) {fmt(nextRun)}</div>
           </div>
-          <button onClick={runNow} className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-2.5 py-1.5 text-[11px] font-semibold text-white hover:bg-accent-600"><RefreshCw className="h-3.5 w-3.5" /> Run now</button>
+          <button onClick={runNow} className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-2.5 py-1.5 text-[12.5px] font-semibold text-white hover:bg-accent-600"><RefreshCw className="h-3.5 w-3.5" /> Run now</button>
         </div>
       </div>
 
       {/* classification folded in: ABC×XYZ + pattern mix */}
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2.5 text-[12.5px] font-semibold">Portfolio — ABC × XYZ <span className="text-[11px] font-normal text-navy-400 dark:text-slate-500">value × variability</span></div>
-          <table className="w-full text-center text-[10.5px]">
+          <div className="mb-2.5 text-[14px] font-semibold">Portfolio — ABC × XYZ <span className="text-[12.5px] font-normal text-navy-400 dark:text-slate-500">value × variability</span></div>
+          <table className="w-full text-center text-[12px]">
             <thead><tr className="text-navy-400 dark:text-slate-500"><th></th>{XYZ.map((x) => <th key={x} className="py-1 font-semibold">{x}</th>)}</tr></thead>
             <tbody>{ABC.map((a) => (
               <tr key={a}><td className="pr-2 text-right font-semibold text-navy-400 dark:text-slate-500">{a}</td>
-                {XYZ.map((x) => { const c = cell(a, x); return <td key={x} className="p-0.5"><div className={`rounded-md py-1.5 ${tone(a, x)}`}><div className="font-semibold">{c ? money(c.value) : '—'}</div><div className="text-[9px] opacity-70">{c?.count ?? 0}</div></div></td>; })}
+                {XYZ.map((x) => { const c = cell(a, x); return <td key={x} className="p-0.5"><div className={`rounded-md py-1.5 ${tone(a, x)}`}><div className="font-semibold">{c ? money(c.value) : '—'}</div><div className="text-[10.5px] opacity-70">{c?.count ?? 0}</div></div></td>; })}
               </tr>))}
             </tbody>
           </table>
         </div>
         <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2.5 text-[12.5px] font-semibold">Demand patterns <span className="text-[11px] font-normal text-navy-400 dark:text-slate-500">from historical consumption (drives forecast method)</span></div>
+          <div className="mb-2.5 text-[14px] font-semibold">Demand patterns <span className="text-[12.5px] font-normal text-navy-400 dark:text-slate-500">from historical consumption (drives forecast method)</span></div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {Object.entries(patternMix).sort((a, b) => b[1] - a[1]).map(([p, n]) => (
               <div key={p} className="rounded-lg border border-navy-100 px-2.5 py-2 dark:border-slate-800">
-                <div className={`text-[15px] font-semibold ${PATTERN_TONE[p] || ''}`}>{n}</div>
-                <div className="text-[10px] capitalize text-navy-500 dark:text-slate-400">{p.replace('_', ' ')}</div>
+                <div className={`text-[16.5px] font-semibold ${PATTERN_TONE[p] || ''}`}>{n}</div>
+                <div className="text-[11.5px] capitalize text-navy-500 dark:text-slate-400">{p.replace('_', ' ')}</div>
               </div>
             ))}
-            {!summaries && <div className="col-span-full text-[11px] text-navy-400 dark:text-slate-500">Loading demand patterns…</div>}
+            {!summaries && <div className="col-span-full text-[12.5px] text-navy-400 dark:text-slate-500">Loading demand patterns…</div>}
           </div>
         </div>
       </div>
 
       {/* group-by + search */}
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <span className="text-[11px] font-medium text-navy-500 dark:text-slate-400">Group by</span>
+        <span className="text-[12.5px] font-medium text-navy-500 dark:text-slate-400">Group by</span>
         <div className="flex flex-wrap gap-1 rounded-lg border border-navy-100 p-0.5 dark:border-slate-800">
           {GROUPS.map((g) => (
-            <button key={g.k} onClick={() => setGroupBy(g.k)} className={`rounded-md px-2.5 py-1 text-[11px] font-medium ${groupBy === g.k ? 'bg-accent-500 text-white' : 'text-navy-600 hover:bg-navy-50 dark:text-slate-300 dark:hover:bg-white/5'}`}>{g.label}</button>
+            <button key={g.k} onClick={() => setGroupBy(g.k)} className={`rounded-md px-2.5 py-1 text-[12.5px] font-medium ${groupBy === g.k ? 'bg-accent-500 text-white' : 'text-navy-600 hover:bg-navy-50 dark:text-slate-300 dark:hover:bg-white/5'}`}>{g.label}</button>
           ))}
         </div>
         <div className="ml-auto flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900">
           <Search className="h-3.5 w-3.5 text-navy-400" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search material…" className="w-44 border-none bg-transparent text-[12px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search material…" className="w-44 border-none bg-transparent text-[13.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
         </div>
       </div>
 
@@ -124,12 +124,12 @@ export default function PlantWorkspace({ plantIds, onOpen }: { plantIds: string[
         {groups.map((g) => (
           <div key={g.key} className="overflow-hidden rounded-xl border border-navy-100 bg-white dark:border-slate-800 dark:bg-[#211c33]">
             <div className="flex items-center justify-between border-b border-navy-100 bg-navy-50/40 px-4 py-2 dark:border-slate-800 dark:bg-slate-900/30">
-              <span className="text-[12.5px] font-semibold capitalize">{String(g.label).replace('_', ' ')}</span>
-              <span className="text-[11px] text-navy-400 dark:text-slate-500">{g.items.length} materials · {money(g.value)}</span>
+              <span className="text-[14px] font-semibold capitalize">{String(g.label).replace('_', ' ')}</span>
+              <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{g.items.length} materials · {money(g.value)}</span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-[12px]">
-                <thead><tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+              <table className="w-full min-w-[760px] text-[13.5px]">
+                <thead><tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                   <th className="px-4 py-2 font-semibold">Material</th><th className="px-3 py-2 font-semibold">Class</th>
                   <th className="px-3 py-2 font-semibold">Demand</th><th className="px-3 py-2 text-right font-semibold">Cover</th>
                   <th className="px-3 py-2 text-right font-semibold">Stock value</th><th className="px-3 py-2 font-semibold">Status</th><th className="px-3 py-2"></th>
@@ -138,12 +138,12 @@ export default function PlantWorkspace({ plantIds, onOpen }: { plantIds: string[
                   const s = sumById.get(m.id); const st = statusOf(m, s);
                   return (
                     <tr key={m.id} onClick={() => onOpen(m)} className="cursor-pointer border-b border-navy-50 last:border-0 hover:bg-navy-50/60 dark:border-slate-800/60 dark:hover:bg-slate-800/40">
-                      <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id}</div></td>
+                      <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id}</div></td>
                       <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{m.xyz}·{m.fsn[0]}·{m.ved[0]}</td>
                       <td className={`px-3 py-2.5 capitalize ${PATTERN_TONE[s?.demand_pattern || ''] || 'text-navy-400 dark:text-slate-500'}`}>{s?.demand_pattern?.replace('_', ' ') || '—'}</td>
                       <td className="px-3 py-2.5 text-right tabular-nums">{m.coverage_days}d</td>
                       <td className="px-3 py-2.5 text-right tabular-nums">{money(m.current_stock_value)}</td>
-                      <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${st.tone}`}>{st.label}</span></td>
+                      <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[11.5px] font-semibold ${st.tone}`}>{st.label}</span></td>
                       <td className="px-3 py-2.5 text-right"><ChevronRight className="ml-auto h-4 w-4 text-navy-300 dark:text-slate-600" /></td>
                     </tr>
                   );

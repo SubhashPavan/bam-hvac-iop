@@ -59,10 +59,10 @@ export default function ReviewQueue() {
       {/* Slim task strip */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-navy-100 px-6 py-3 dark:border-slate-800">
         <div>
-          <h1 className="text-[16px] font-semibold tracking-tight">Review</h1>
-          <p className="text-[11.5px] text-navy-500 dark:text-slate-500">Highest-impact recommendations first — decide, and they route to approval.</p>
+          <h1 className="text-[17px] font-semibold tracking-tight">Review</h1>
+          <p className="text-[13px] text-navy-500 dark:text-slate-500">Highest-impact recommendations first — decide, and they route to approval.</p>
         </div>
-        <div className="ml-auto flex items-center gap-5 text-[12px]">
+        <div className="ml-auto flex items-center gap-5 text-[13.5px]">
           <Metric value={String(remaining.length)} label="to review" />
           <Metric value={money(potentialLeft)} label="potential left" />
           <Metric value={String(actionedCount)} label="actioned" tone="emerald" />
@@ -76,8 +76,8 @@ export default function ReviewQueue() {
           {remaining.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center text-navy-500 dark:text-slate-400">
               <CheckCircle2 className="h-8 w-8 text-emerald-500" />
-              <p className="text-[13px] font-medium">Queue cleared</p>
-              <p className="text-[11.5px]">You've reviewed everything. {money(queuedValue)} routed to approval.</p>
+              <p className="text-[14.5px] font-medium">Queue cleared</p>
+              <p className="text-[13px]">You've reviewed everything. {money(queuedValue)} routed to approval.</p>
             </div>
           ) : remaining.map(({ r, score }) => {
             const meta = TYPE_META[r.type];
@@ -89,17 +89,17 @@ export default function ReviewQueue() {
                 <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${meta.dot}`} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[12.5px] font-medium ${meta.tone}`}>{meta.verb}</span>
-                    <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${b.tone}`}>{b.label}</span>
+                    <span className={`text-[14px] font-medium ${meta.tone}`}>{meta.verb}</span>
+                    <span className={`rounded-full px-1.5 py-0.5 text-[10.5px] font-semibold ${b.tone}`}>{b.label}</span>
                   </div>
-                  <div className="truncate text-[12px] text-navy-700 dark:text-slate-300">{r.material_desc}</div>
-                  <div className="mt-0.5 flex items-center gap-2 text-[10.5px] text-navy-400 dark:text-slate-500">
+                  <div className="truncate text-[13.5px] text-navy-700 dark:text-slate-300">{r.material_desc}</div>
+                  <div className="mt-0.5 flex items-center gap-2 text-[12px] text-navy-400 dark:text-slate-500">
                     <span>{r.plant_id}</span><span>·</span><span>{r.confidence}% conf.</span>
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="text-[12.5px] font-semibold text-amber-600 dark:text-amber-400">{money(r.savings_potential)}</div>
-                  <div className="text-[9.5px] text-navy-400 dark:text-slate-500">savings</div>
+                  <div className="text-[14px] font-semibold text-amber-600 dark:text-amber-400">{money(r.savings_potential)}</div>
+                  <div className="text-[11px] text-navy-400 dark:text-slate-500">savings</div>
                 </div>
               </button>
             );
@@ -109,7 +109,7 @@ export default function ReviewQueue() {
         {/* Decision panel */}
         <div className="custom-scrollbar overflow-y-auto p-6">
           {sel ? <DecisionPanel rec={sel.r} onDecide={(d) => decide(sel.r.id, d)} /> : (
-            <div className="flex h-full items-center justify-center text-[13px] text-navy-500 dark:text-slate-400">Select a recommendation to review.</div>
+            <div className="flex h-full items-center justify-center text-[14.5px] text-navy-500 dark:text-slate-400">Select a recommendation to review.</div>
           )}
         </div>
       </div>
@@ -125,19 +125,19 @@ function DecisionPanel({ rec, onDecide }: { rec: Recommendation; onDecide: (d: D
   return (
     <div className="mx-auto max-w-2xl">
       {/* Material */}
-      <div className="mb-1 font-mono text-[11px] text-navy-400 dark:text-slate-500">{rec.material_id} · {rec.plant_id} · {rec.country}</div>
-      <h2 className="text-[20px] font-semibold tracking-tight">{rec.material_desc}</h2>
+      <div className="mb-1 font-mono text-[12.5px] text-navy-400 dark:text-slate-500">{rec.material_id} · {rec.plant_id} · {rec.country}</div>
+      <h2 className="text-[21px] font-semibold tracking-tight">{rec.material_desc}</h2>
 
       {/* The recommendation, plainly */}
       <div className="mt-4 flex items-center gap-3 rounded-2xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
         <span className={`flex h-11 w-11 items-center justify-center rounded-xl bg-navy-50 ${meta.tone} dark:bg-slate-800`}><Icon className="h-5 w-5" /></span>
         <div className="min-w-0 flex-1">
-          <div className={`text-[15px] font-semibold ${meta.tone}`}>{meta.verb}</div>
-          <div className="text-[12.5px] text-navy-500 dark:text-slate-400">
+          <div className={`text-[16.5px] font-semibold ${meta.tone}`}>{meta.verb}</div>
+          <div className="text-[14px] text-navy-500 dark:text-slate-400">
             {rec.type === 'dispose' ? `Write off ${money(rec.current_stock_value)} of obsolete stock` : rec.type === 'increase_stock' || rec.type === 'emergency_action' ? `Raise cover to avoid stockout` : `Release ${money(rec.savings_potential)} of tied-up capital`}
           </div>
         </div>
-        <span className="rounded-lg bg-accent-500/10 px-2.5 py-1 text-[11px] font-semibold text-accent-700 dark:text-accent-300">{rec.confidence}% confident</span>
+        <span className="rounded-lg bg-accent-500/10 px-2.5 py-1 text-[12.5px] font-semibold text-accent-700 dark:text-accent-300">{rec.confidence}% confident</span>
       </div>
 
       {/* Impact — 3 clean figures */}
@@ -149,8 +149,8 @@ function DecisionPanel({ rec, onDecide }: { rec: Recommendation; onDecide: (d: D
 
       {/* Why */}
       <div className="mt-3 rounded-2xl bg-accent-500/5 p-4 dark:bg-accent-500/10">
-        <div className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold text-accent-700 dark:text-accent-300"><Sparkles className="h-3.5 w-3.5" /> Why the AI suggests this</div>
-        <p className="text-[13px] leading-relaxed text-navy-700 dark:text-slate-300">{rec.ai_reasoning}</p>
+        <div className="mb-1 flex items-center gap-1.5 text-[13.5px] font-semibold text-accent-700 dark:text-accent-300"><Sparkles className="h-3.5 w-3.5" /> Why the AI suggests this</div>
+        <p className="text-[14.5px] leading-relaxed text-navy-700 dark:text-slate-300">{rec.ai_reasoning}</p>
         <div className="mt-2.5 flex flex-wrap gap-1.5">
           <Chip>Coverage {rec.coverage_days}d</Chip>
           <Chip>{rec.fsn}-moving</Chip>
@@ -161,28 +161,28 @@ function DecisionPanel({ rec, onDecide }: { rec: Recommendation; onDecide: (d: D
 
       {/* Decision */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <button onClick={() => onDecide('accept')} className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2.5 text-[13px] font-semibold text-white hover:bg-emerald-600"><Check className="h-4 w-4" /> Accept</button>
-        <button onClick={() => onDecide('modify')} className="inline-flex items-center gap-1.5 rounded-xl border border-navy-200 px-4 py-2.5 text-[13px] font-semibold text-navy-700 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"><Pencil className="h-4 w-4" /> Modify</button>
-        <button onClick={() => onDecide('reject')} className="inline-flex items-center gap-1.5 rounded-xl border border-navy-200 px-4 py-2.5 text-[13px] font-semibold text-rose-600 hover:bg-rose-50 dark:border-slate-700 dark:hover:bg-rose-500/10"><Ban className="h-4 w-4" /> Reject</button>
+        <button onClick={() => onDecide('accept')} className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2.5 text-[14.5px] font-semibold text-white hover:bg-emerald-600"><Check className="h-4 w-4" /> Accept</button>
+        <button onClick={() => onDecide('modify')} className="inline-flex items-center gap-1.5 rounded-xl border border-navy-200 px-4 py-2.5 text-[14.5px] font-semibold text-navy-700 hover:bg-navy-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"><Pencil className="h-4 w-4" /> Modify</button>
+        <button onClick={() => onDecide('reject')} className="inline-flex items-center gap-1.5 rounded-xl border border-navy-200 px-4 py-2.5 text-[14.5px] font-semibold text-rose-600 hover:bg-rose-50 dark:border-slate-700 dark:hover:bg-rose-500/10"><Ban className="h-4 w-4" /> Reject</button>
       </div>
-      <div className="mt-2.5 flex items-center gap-1.5 text-[11.5px] text-navy-400 dark:text-slate-500"><ArrowRight className="h-3.5 w-3.5" /> On accept, routes to: <span className="font-medium text-navy-600 dark:text-slate-400">{nextStage}</span></div>
+      <div className="mt-2.5 flex items-center gap-1.5 text-[13px] text-navy-400 dark:text-slate-500"><ArrowRight className="h-3.5 w-3.5" /> On accept, routes to: <span className="font-medium text-navy-600 dark:text-slate-400">{nextStage}</span></div>
     </div>
   );
 }
 
 function Metric({ value, label, tone }: { value: string; label: string; tone?: 'emerald' | 'amber' }) {
   const c = tone === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : tone === 'amber' ? 'text-amber-600 dark:text-amber-400' : '';
-  return <div className="text-right"><span className={`text-[15px] font-semibold ${c}`}>{value}</span> <span className="text-[11px] text-navy-400 dark:text-slate-500">{label}</span></div>;
+  return <div className="text-right"><span className={`text-[16.5px] font-semibold ${c}`}>{value}</span> <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{label}</span></div>;
 }
 function Figure({ label, value, tone }: { label: string; value: string; tone?: 'emerald' | 'amber' }) {
   const c = tone === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : tone === 'amber' ? 'text-amber-600 dark:text-amber-400' : '';
   return (
     <div className="rounded-xl border border-navy-100 bg-white px-3 py-2.5 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className="text-[10px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
-      <div className={`text-[17px] font-semibold ${c}`}>{value}</div>
+      <div className="text-[11.5px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
+      <div className={`text-[18px] font-semibold ${c}`}>{value}</div>
     </div>
   );
 }
 function Chip({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-md bg-white/70 px-1.5 py-0.5 text-[10.5px] font-medium text-navy-600 dark:bg-slate-800 dark:text-slate-300">{children}</span>;
+  return <span className="rounded-md bg-white/70 px-1.5 py-0.5 text-[12px] font-medium text-navy-600 dark:bg-slate-800 dark:text-slate-300">{children}</span>;
 }

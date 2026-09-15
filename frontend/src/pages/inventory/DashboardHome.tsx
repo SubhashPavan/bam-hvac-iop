@@ -40,12 +40,12 @@ export default function DashboardHome({ mats, recs, selected, period, onNavigate
   return (
     <div className="px-5 py-4">
       <div className="mb-4">
-        <div className="text-[11.5px] text-navy-500 dark:text-slate-400">Good morning · <span className="font-medium text-accent-600 dark:text-accent-400">{recs.length} recommendations need you</span> across {selected.map(plantName).join(', ')}</div>
-        <div className="text-[20px] font-semibold tracking-tight">Inventory planning cockpit</div>
+        <div className="text-[13px] text-navy-500 dark:text-slate-400">Good morning · <span className="font-medium text-accent-600 dark:text-accent-400">{recs.length} recommendations need you</span> across {selected.map(plantName).join(', ')}</div>
+        <div className="text-[21px] font-semibold tracking-tight">Inventory planning cockpit</div>
       </div>
       <div className="mb-4 flex gap-1 overflow-x-auto border-b border-navy-100 dark:border-slate-800">
         {TABS.map((t) => (
-          <button key={t.k} onClick={() => setTab(t.k)} className={`-mb-px inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3.5 py-2 text-[12.5px] font-medium ${tab === t.k ? 'border-accent-500 text-navy-900 dark:text-slate-100' : 'border-transparent text-navy-400 hover:text-navy-600 dark:text-slate-500 dark:hover:text-slate-300'}`}><t.icon className="h-3.5 w-3.5" />{t.label}</button>
+          <button key={t.k} onClick={() => setTab(t.k)} className={`-mb-px inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3.5 py-2 text-[14px] font-medium ${tab === t.k ? 'border-accent-500 text-navy-900 dark:text-slate-100' : 'border-transparent text-navy-400 hover:text-navy-600 dark:text-slate-500 dark:hover:text-slate-300'}`}><t.icon className="h-3.5 w-3.5" />{t.label}</button>
         ))}
       </div>
       {tab === 'overview' && <OverviewTab mats={mats} recs={recs} selected={selected} period={period} onSubmit={onSubmit} />}
@@ -158,12 +158,12 @@ function OverviewTab({ mats, recs, selected, period, onSubmit }: { mats: Materia
             <Panel title="Classification — ABC × XYZ" sub="value × demand variability">
               <div className="overflow-x-auto">
                 <table className="min-w-[300px] border-separate" style={{ borderSpacing: 3 }}>
-                  <thead><tr><th /><th className="pb-1 text-[9px] font-semibold text-navy-400 dark:text-slate-500">X</th><th className="pb-1 text-[9px] font-semibold text-navy-400 dark:text-slate-500">Y</th><th className="pb-1 text-[9px] font-semibold text-navy-400 dark:text-slate-500">Z</th></tr></thead>
+                  <thead><tr><th /><th className="pb-1 text-[10.5px] font-semibold text-navy-400 dark:text-slate-500">X</th><th className="pb-1 text-[10.5px] font-semibold text-navy-400 dark:text-slate-500">Y</th><th className="pb-1 text-[10.5px] font-semibold text-navy-400 dark:text-slate-500">Z</th></tr></thead>
                   <tbody>
                     {ABC.map((r) => (
                       <tr key={r}>
-                        <td className="pr-1.5 text-right text-[9px] font-semibold text-navy-400 dark:text-slate-500">{r}</td>
-                        {XYZ.map((c) => { const x = cell(r, c); return <td key={c}><div className={`min-w-[64px] rounded-md p-1.5 ${tone(r, c)}`}><div className="text-[11px] font-semibold leading-none">{money(x.value)}</div><div className="mt-0.5 text-[8.5px] opacity-80">{x.count}</div></div></td>; })}
+                        <td className="pr-1.5 text-right text-[10.5px] font-semibold text-navy-400 dark:text-slate-500">{r}</td>
+                        {XYZ.map((c) => { const x = cell(r, c); return <td key={c}><div className={`min-w-[64px] rounded-md p-1.5 ${tone(r, c)}`}><div className="text-[12.5px] font-semibold leading-none">{money(x.value)}</div><div className="mt-0.5 text-[9.5px] opacity-80">{x.count}</div></div></td>; })}
                       </tr>
                     ))}
                   </tbody>
@@ -183,7 +183,7 @@ function OverviewTab({ mats, recs, selected, period, onSubmit }: { mats: Materia
                 </ResponsiveContainer>
               </div>
               <div className="mt-1 flex flex-col gap-1">
-                {bench.map((b) => <div key={b.id} className="flex items-center gap-2 text-[11px]"><span className="flex-1 truncate">{b.name}</span><span className={`font-medium ${b.service < 90 ? 'text-rose-600 dark:text-rose-400' : ''}`}>{b.service}%</span><span className="text-navy-400 dark:text-slate-500">{b.turns}×</span></div>)}
+                {bench.map((b) => <div key={b.id} className="flex items-center gap-2 text-[12.5px]"><span className="flex-1 truncate">{b.name}</span><span className={`font-medium ${b.service < 90 ? 'text-rose-600 dark:text-rose-400' : ''}`}>{b.service}%</span><span className="text-navy-400 dark:text-slate-500">{b.turns}×</span></div>)}
               </div>
             </Panel>
           </div>
@@ -191,19 +191,19 @@ function OverviewTab({ mats, recs, selected, period, onSubmit }: { mats: Materia
 
         {/* Recommendations rail */}
         <div className="rounded-xl border border-navy-100 bg-white p-3.5 dark:border-slate-800 dark:bg-[#211c33]">
-          <div className="mb-2 flex items-center gap-2"><span className="text-[12.5px] font-semibold">Recommendations</span><span className="ml-auto rounded-full bg-accent-500/10 px-2 py-0.5 text-[10px] font-semibold text-accent-600 dark:text-accent-400">{recs.length}</span></div>
+          <div className="mb-2 flex items-center gap-2"><span className="text-[14px] font-semibold">Recommendations</span><span className="ml-auto rounded-full bg-accent-500/10 px-2 py-0.5 text-[11.5px] font-semibold text-accent-600 dark:text-accent-400">{recs.length}</span></div>
           <div className="custom-scrollbar flex max-h-[640px] flex-col gap-2 overflow-y-auto pr-1">
             {topRecs.map((r) => {
               const emg = r.type === 'emergency_action';
               return (
                 <div key={r.id} className={`rounded-lg border-l-2 p-2.5 ${emg ? 'border-l-rose-500 border border-rose-300/40 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-500/10' : 'border-l-accent-400 border border-navy-100 dark:border-slate-800'}`}>
                   <div className="flex items-center gap-1.5">
-                    <span className={`rounded px-1.5 py-0.5 text-[9px] font-semibold ${REC_TONE[r.type]}`}>{REC_TYPE_LABEL[r.type]}</span>
-                    <span className="ml-auto text-[9.5px] text-navy-400 dark:text-slate-500">{emg ? 'urgent' : `${r.confidence}%`}</span>
+                    <span className={`rounded px-1.5 py-0.5 text-[10.5px] font-semibold ${REC_TONE[r.type]}`}>{REC_TYPE_LABEL[r.type]}</span>
+                    <span className="ml-auto text-[11px] text-navy-400 dark:text-slate-500">{emg ? 'urgent' : `${r.confidence}%`}</span>
                   </div>
-                  <div className="mt-1.5 text-[11.5px] font-medium leading-tight">{r.material_desc}</div>
-                  <div className="text-[10px] text-navy-400 dark:text-slate-500">{r.plant_id} · {money(r.savings_potential)} savings</div>
-                  <button onClick={() => onSubmit(r.id, r.material_desc)} className={`mt-2 w-full rounded-md py-1.5 text-[10.5px] font-semibold text-white ${emg ? 'bg-rose-500 hover:bg-rose-600' : 'bg-accent-500 hover:bg-accent-600'}`}>{emg ? 'Act now' : 'Act'}</button>
+                  <div className="mt-1.5 text-[13px] font-medium leading-tight">{r.material_desc}</div>
+                  <div className="text-[11.5px] text-navy-400 dark:text-slate-500">{r.plant_id} · {money(r.savings_potential)} savings</div>
+                  <button onClick={() => onSubmit(r.id, r.material_desc)} className={`mt-2 w-full rounded-md py-1.5 text-[12px] font-semibold text-white ${emg ? 'bg-rose-500 hover:bg-rose-600' : 'bg-accent-500 hover:bg-accent-600'}`}>{emg ? 'Act now' : 'Act'}</button>
                 </div>
               );
             })}
@@ -264,8 +264,8 @@ function ForecastingTab({ selected }: { selected: string[] }) {
     <div className="space-y-4">
       {/* Insight band */}
       <div className="rounded-xl border border-accent-300/40 bg-accent-500/5 px-4 py-3 dark:border-accent-500/25 dark:bg-accent-500/10">
-        <div className="text-[10px] font-semibold uppercase tracking-wide text-accent-600 dark:text-accent-400">Forecast read</div>
-        <div className="text-[12.5px] text-navy-800 dark:text-slate-200"><b>{avgAcc}% avg accuracy</b> · {rising} SKUs trending up, {declining} down · <b>{intermittent} intermittent (Croston/SBA)</b> · <b className="text-amber-600 dark:text-amber-400">{understocked} under-stocked vs forecast</b></div>
+        <div className="text-[11.5px] font-semibold uppercase tracking-wide text-accent-600 dark:text-accent-400">Forecast read</div>
+        <div className="text-[14px] text-navy-800 dark:text-slate-200"><b>{avgAcc}% avg accuracy</b> · {rising} SKUs trending up, {declining} down · <b>{intermittent} intermittent (Croston/SBA)</b> · <b className="text-amber-600 dark:text-amber-400">{understocked} under-stocked vs forecast</b></div>
       </div>
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         <Stat value={`${avgAcc}%`} label="Forecast accuracy" tone={avgAcc < 80 ? 'amber' : 'mint'} sub="MAPE-based" />
@@ -286,7 +286,7 @@ function ForecastingTab({ selected }: { selected: string[] }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-1 text-[10.5px] text-navy-500 dark:text-slate-400"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: C.violet }} /> intermittent categories use Croston / Syntetos-Boylan.</div>
+        <div className="mt-1 text-[12px] text-navy-500 dark:text-slate-400"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: C.violet }} /> intermittent categories use Croston / Syntetos-Boylan.</div>
       </Panel>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
@@ -294,9 +294,9 @@ function ForecastingTab({ selected }: { selected: string[] }) {
           <div className="custom-scrollbar max-h-[360px] space-y-1.5 overflow-y-auto pr-1">
             {items.slice(0, 30).map((m) => (
               <button key={m.id} onClick={() => setSelId(m.id)} className={`flex w-full items-center gap-2 rounded-lg border px-2.5 py-2 text-left ${m.id === selId ? 'border-accent-400 bg-accent-500/10 dark:border-accent-500' : 'border-navy-100 hover:bg-navy-50 dark:border-slate-800 dark:hover:bg-slate-800/40'}`}>
-                <div className="min-w-0 flex-1"><div className="truncate text-[11.5px] font-medium">{m.description}</div><div className="font-mono text-[9.5px] text-navy-400 dark:text-slate-500">{m.plant_id} · {m.xyz}-class · {m.method}</div></div>
-                {m.understocked && <span className="rounded bg-rose-500/15 px-1.5 py-0.5 text-[9px] font-semibold text-rose-600 dark:text-rose-400">low</span>}
-                <span className={`text-[11px] font-semibold ${m.trendPct >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{m.trendPct >= 0 ? '+' : ''}{m.trendPct}%</span>
+                <div className="min-w-0 flex-1"><div className="truncate text-[13px] font-medium">{m.description}</div><div className="font-mono text-[11px] text-navy-400 dark:text-slate-500">{m.plant_id} · {m.xyz}-class · {m.method}</div></div>
+                {m.understocked && <span className="rounded bg-rose-500/15 px-1.5 py-0.5 text-[10.5px] font-semibold text-rose-600 dark:text-rose-400">low</span>}
+                <span className={`text-[12.5px] font-semibold ${m.trendPct >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{m.trendPct >= 0 ? '+' : ''}{m.trendPct}%</span>
               </button>
             ))}
           </div>
@@ -324,7 +324,7 @@ function ForecastingTab({ selected }: { selected: string[] }) {
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
-            <div className="mt-2 rounded-lg bg-accent-500/5 p-2.5 text-[11.5px] text-navy-700 dark:bg-accent-500/10 dark:text-slate-300">{fc.insight}</div>
+            <div className="mt-2 rounded-lg bg-accent-500/5 p-2.5 text-[13px] text-navy-700 dark:bg-accent-500/10 dark:text-slate-300">{fc.insight}</div>
           </Panel>
         )}
       </div>
@@ -382,30 +382,30 @@ function SimulationTab({ selected, onNavigate }: { selected: string[]; onNavigat
           </ResponsiveContainer>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          <span className="text-[11.5px] font-medium">Target service</span>
+          <span className="text-[13px] font-medium">Target service</span>
           <input type="range" min={80} max={99} value={target} onChange={(e) => setTarget(+e.target.value)} className="h-1.5 flex-1 min-w-[160px] cursor-pointer accent-accent-500" />
-          <span className="w-12 text-right text-[13px] font-semibold text-accent-600 dark:text-accent-400">{target}%</span>
+          <span className="w-12 text-right text-[14.5px] font-semibold text-accent-600 dark:text-accent-400">{target}%</span>
         </div>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <MiniOutcome label="Required investment" value={money(sim.investment)} delta={`${sim.deltaPct > 0 ? '+' : ''}${sim.deltaPct}%`} good={sim.deltaPct <= 0} />
           <MiniOutcome label="Stockout risk" value={`${sim.stockoutRisk}%`} delta={target >= t.currentService ? 'lower' : 'higher'} good={target >= t.currentService} />
           <MiniOutcome label="vs current" value={`${target - t.currentService >= 0 ? '+' : ''}${target - t.currentService} pts`} delta="service" good={target >= t.currentService} />
         </div>
-        <div className="mt-2 flex items-center gap-3 text-[10.5px] text-navy-500 dark:text-slate-400"><span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: C.mint }} /> current</span><span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: C.amber }} /> simulated target</span></div>
+        <div className="mt-2 flex items-center gap-3 text-[12px] text-navy-500 dark:text-slate-400"><span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: C.mint }} /> current</span><span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: C.amber }} /> simulated target</span></div>
       </Panel>
 
       <Panel title="What-if scenarios" sub="pre-modeled disruptions & policy moves">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {scenarios.map((s) => (
             <div key={s.key} className="rounded-xl border border-navy-100 p-3 dark:border-slate-800">
-              <div className="mb-2 flex items-center gap-2"><span className={`flex h-7 w-7 items-center justify-center rounded-lg ${s.tone === 'rose' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : s.tone === 'amber' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'}`}><s.icon className="h-4 w-4" /></span><span className="text-[12.5px] font-semibold">{s.title}</span></div>
+              <div className="mb-2 flex items-center gap-2"><span className={`flex h-7 w-7 items-center justify-center rounded-lg ${s.tone === 'rose' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : s.tone === 'amber' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'}`}><s.icon className="h-4 w-4" /></span><span className="text-[14px] font-semibold">{s.title}</span></div>
               <div className="space-y-1">
-                {s.stats.map(([l, v]) => <div key={l} className="flex items-center justify-between text-[11.5px]"><span className="text-navy-500 dark:text-slate-400">{l}</span><span className="font-semibold tabular-nums">{v}</span></div>)}
+                {s.stats.map(([l, v]) => <div key={l} className="flex items-center justify-between text-[13px]"><span className="text-navy-500 dark:text-slate-400">{l}</span><span className="font-semibold tabular-nums">{v}</span></div>)}
               </div>
             </div>
           ))}
         </div>
-        <button onClick={draftFromSim} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 text-[11.5px] font-semibold text-white hover:bg-accent-600"><Zap className="h-3.5 w-3.5" /> Draft safety-stock action (attach this scenario)</button>
+        <button onClick={draftFromSim} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 text-[13px] font-semibold text-white hover:bg-accent-600"><Zap className="h-3.5 w-3.5" /> Draft safety-stock action (attach this scenario)</button>
       </Panel>
     </div>
   );
@@ -443,13 +443,13 @@ function AvailabilityTab({ selected, recs, onSubmit }: { selected: string[]; rec
             return (
               <div key={m.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-navy-100 px-3 py-2 dark:border-slate-800">
                 <span className={`h-2.5 w-2.5 rounded-full ${m.coverage_days < 10 ? 'bg-rose-500' : 'bg-amber-500'}`} />
-                <div className="min-w-0 flex-1"><div className="truncate text-[12px] font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id} · {m.ved} · crit {m.criticality_score}</div></div>
-                <div className="text-right"><div className={`text-[13px] font-semibold ${m.coverage_days < 10 ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}`}>{m.coverage_days}d</div></div>
-                {rec && <button onClick={() => onSubmit(rec.id, rec.material_desc)} className="rounded-md bg-rose-500 px-2.5 py-1.5 text-[10.5px] font-semibold text-white hover:bg-rose-600">Expedite</button>}
+                <div className="min-w-0 flex-1"><div className="truncate text-[13.5px] font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · {m.plant_id} · {m.ved} · crit {m.criticality_score}</div></div>
+                <div className="text-right"><div className={`text-[14.5px] font-semibold ${m.coverage_days < 10 ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}`}>{m.coverage_days}d</div></div>
+                {rec && <button onClick={() => onSubmit(rec.id, rec.material_desc)} className="rounded-md bg-rose-500 px-2.5 py-1.5 text-[12px] font-semibold text-white hover:bg-rose-600">Expedite</button>}
               </div>
             );
           })}
-          {ar.atRisk.length === 0 && <div className="py-6 text-center text-[12.5px] text-navy-500 dark:text-slate-400">No vital spares at risk. 👍</div>}
+          {ar.atRisk.length === 0 && <div className="py-6 text-center text-[14px] text-navy-500 dark:text-slate-400">No vital spares at risk. 👍</div>}
         </div>
       </Panel>
     </div>
@@ -460,7 +460,7 @@ function AvailabilityTab({ selected, recs, onSubmit }: { selected: string[]; rec
 function Panel({ title, sub, children, className }: { title?: string; sub?: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33] ${className || ''}`}>
-      {title && <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5"><span className="text-[12.5px] font-semibold">{title}</span>{sub && <span className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>}
+      {title && <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5"><span className="text-[14px] font-semibold">{title}</span>{sub && <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>}
       {children}
     </div>
   );
@@ -469,17 +469,17 @@ const TT: Record<string, string> = { rose: 'text-rose-600 dark:text-rose-400', a
 function Stat({ value, label, sub, tone }: { value: string; label: string; sub?: string; tone?: string }) {
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className={`text-[19px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
-      <div className="mt-1.5 text-[11px] font-medium">{label}</div>
-      {sub && <div className="text-[9.5px] text-navy-400 dark:text-slate-500">{sub}</div>}
+      <div className={`text-[20px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
+      <div className="mt-1.5 text-[12.5px] font-medium">{label}</div>
+      {sub && <div className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</div>}
     </div>
   );
 }
 function MiniOutcome({ label, value, delta, good }: { label: string; value: string; delta: string; good: boolean }) {
   return (
     <div className="rounded-lg border border-navy-100 bg-navy-50/50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900/40">
-      <div className="text-[10px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
-      <div className="flex items-baseline gap-1.5"><span className="text-[15px] font-semibold">{value}</span><span className={`text-[10px] ${good ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{delta}</span></div>
+      <div className="text-[11.5px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
+      <div className="flex items-baseline gap-1.5"><span className="text-[16.5px] font-semibold">{value}</span><span className={`text-[11.5px] ${good ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{delta}</span></div>
     </div>
   );
 }
@@ -489,8 +489,8 @@ function Scorecard({ icon: Icon, tone, value, label, sub }: { icon: typeof Boxes
     <div className="rounded-xl border border-navy-100 bg-white p-3.5 dark:border-slate-800 dark:bg-[#211c33]">
       <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${SC_TONE[tone]}`}><Icon className="h-4 w-4" /></span>
       <div className="mt-2.5 text-[21px] font-semibold leading-none tracking-tight">{value}</div>
-      <div className="mt-1.5 text-[11.5px] font-medium">{label}</div>
-      <div className="text-[10px] text-navy-400 dark:text-slate-500">{sub}</div>
+      <div className="mt-1.5 text-[13px] font-medium">{label}</div>
+      <div className="text-[11.5px] text-navy-400 dark:text-slate-500">{sub}</div>
     </div>
   );
 }

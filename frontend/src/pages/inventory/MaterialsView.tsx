@@ -39,27 +39,27 @@ export default function MaterialsView({ mats, recs }: { mats: Material[]; recs: 
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="text-[19px] font-semibold tracking-tight">Materials</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">Every SKU across your plants · open a row for its 360° — demand, cross-plant usage, opportunities, duplicates</p>
+        <h1 className="text-[20px] font-semibold tracking-tight">Materials</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">Every SKU across your plants · open a row for its 360° — demand, cross-plant usage, opportunities, duplicates</p>
       </div>
 
       {/* Search + filters */}
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <div className="flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-3 py-1.5 dark:border-slate-700 dark:bg-slate-900">
           <Search className="h-3.5 w-3.5 text-navy-400" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search material, id, supplier, category…" className="w-56 border-none bg-transparent text-[12.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search material, id, supplier, category…" className="w-56 border-none bg-transparent text-[14px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
         </div>
         {FILTERS.map((f) => (
-          <button key={f.k} onClick={() => setFilter(f.k)} className={`rounded-lg px-2.5 py-1.5 text-[12px] font-semibold ${filter === f.k ? 'bg-accent-500 text-white' : 'bg-navy-100 text-navy-600 hover:bg-navy-200 dark:bg-slate-800 dark:text-slate-300'}`}>{f.label}</button>
+          <button key={f.k} onClick={() => setFilter(f.k)} className={`rounded-lg px-2.5 py-1.5 text-[13.5px] font-semibold ${filter === f.k ? 'bg-accent-500 text-white' : 'bg-navy-100 text-navy-600 hover:bg-navy-200 dark:bg-slate-800 dark:text-slate-300'}`}>{f.label}</button>
         ))}
-        <span className="ml-auto rounded-full bg-accent-500/10 px-3 py-1 text-[11.5px] font-medium text-accent-700 dark:text-accent-300">{filtered.length} of {mats.length}</span>
+        <span className="ml-auto rounded-full bg-accent-500/10 px-3 py-1 text-[13px] font-medium text-accent-700 dark:text-accent-300">{filtered.length} of {mats.length}</span>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-navy-100 dark:border-slate-800">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] text-[12px]">
+          <table className="w-full min-w-[860px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-navy-100 bg-navy-50/60 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-500">
+              <tr className="border-b border-navy-100 bg-navy-50/60 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-500">
                 <th className="px-4 py-2.5 font-semibold">Material</th>
                 <th className="px-3 py-2.5 font-semibold">Plant</th>
                 <th className="px-3 py-2.5 font-semibold">Class</th>
@@ -71,11 +71,11 @@ export default function MaterialsView({ mats, recs }: { mats: Material[]; recs: 
             </thead>
             <tbody>
               {filtered.slice(0, 60).map((m) => <MaterialRow key={m.id} m={m} open={openId === m.id} onToggle={() => setOpenId(openId === m.id ? null : m.id)} />)}
-              {filtered.length === 0 && <tr><td colSpan={7} className="px-4 py-10 text-center text-[13px] text-navy-500 dark:text-slate-400">No materials match.</td></tr>}
+              {filtered.length === 0 && <tr><td colSpan={7} className="px-4 py-10 text-center text-[14.5px] text-navy-500 dark:text-slate-400">No materials match.</td></tr>}
             </tbody>
           </table>
         </div>
-        {filtered.length > 60 && <div className="border-t border-navy-100 px-4 py-2 text-center text-[11px] text-navy-400 dark:border-slate-800 dark:text-slate-500">Showing 60 of {filtered.length} — refine your search.</div>}
+        {filtered.length > 60 && <div className="border-t border-navy-100 px-4 py-2 text-center text-[12.5px] text-navy-400 dark:border-slate-800 dark:text-slate-500">Showing 60 of {filtered.length} — refine your search.</div>}
       </div>
     </div>
   );
@@ -101,12 +101,12 @@ function MaterialRow({ m, open, onToggle }: { m: Material; open: boolean; onTogg
   return (
     <>
       <tr className={`border-b border-navy-50 hover:bg-navy-50/50 dark:border-slate-800/60 dark:bg-[#211c33] dark:hover:bg-slate-800/30 ${open ? 'bg-navy-50/50 dark:bg-slate-800/30' : ''}`}>
-        <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id} · {m.supplier}</div></td>
+        <td className="px-4 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id} · {m.supplier}</div></td>
         <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{m.plant_id}</td>
-        <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[9.5px] font-semibold ${VED_TONE[m.ved]}`}>{m.ved}</span> <span className="text-[10px] text-navy-400 dark:text-slate-500">{m.xyz}·{m.fsn[0]}</span></td>
+        <td className="px-3 py-2.5"><span className={`rounded px-1.5 py-0.5 text-[11px] font-semibold ${VED_TONE[m.ved]}`}>{m.ved}</span> <span className="text-[11.5px] text-navy-400 dark:text-slate-500">{m.xyz}·{m.fsn[0]}</span></td>
         <td className={`px-3 py-2.5 text-right font-medium ${m.coverage_days < 15 ? 'text-rose-600 dark:text-rose-400' : ''}`}>{m.coverage_days}d</td>
         <td className="px-3 py-2.5 text-right tabular-nums">{money(m.current_stock_value)}</td>
-        <td className="px-3 py-2.5">{ins.opportunity ? <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/12 px-2 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">{ins.opportunity.label} · {money(ins.opportunity.savings)}</span> : <span className="text-[11px] text-navy-300 dark:text-slate-600">—</span>}</td>
+        <td className="px-3 py-2.5">{ins.opportunity ? <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/12 px-2 py-0.5 text-[11.5px] font-semibold text-amber-600 dark:text-amber-400">{ins.opportunity.label} · {money(ins.opportunity.savings)}</span> : <span className="text-[12.5px] text-navy-300 dark:text-slate-600">—</span>}</td>
         <td className="px-3 py-2.5 text-right"><button onClick={onToggle} className="rounded-lg p-1 text-navy-400 hover:bg-navy-100 dark:text-slate-500 dark:hover:bg-slate-800"><ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} /></button></td>
       </tr>
       {open && (
@@ -140,7 +140,7 @@ function MaterialRow({ m, open, onToggle }: { m: Material; open: boolean; onTogg
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="mt-1 text-[10.5px] text-navy-500 dark:text-slate-400">{fc.demand_pattern} demand ({m.xyz}-class) · {fc.forecast_confidence}% accuracy · safety stock ≈ {safety}</div>
+                <div className="mt-1 text-[12px] text-navy-500 dark:text-slate-400">{fc.demand_pattern} demand ({m.xyz}-class) · {fc.forecast_confidence}% accuracy · safety stock ≈ {safety}</div>
               </Panel>
 
               {/* Usage history */}
@@ -162,46 +162,46 @@ function MaterialRow({ m, open, onToggle }: { m: Material; open: boolean; onTogg
             <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
               {/* Cross-plant */}
               <Panel title="Same item across plants" sub={`${ins.crossPlant.length} plants stock this`}>
-                {ins.crossPlant.length === 0 ? <div className="py-3 text-center text-[11.5px] text-navy-500 dark:text-slate-400">Unique to this plant.</div> : (
+                {ins.crossPlant.length === 0 ? <div className="py-3 text-center text-[13px] text-navy-500 dark:text-slate-400">Unique to this plant.</div> : (
                   <div className="flex flex-col gap-1">
                     {ins.crossPlant.map((c, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[11.5px]">
+                      <div key={i} className="flex items-center gap-2 text-[13px]">
                         <span className="w-20 truncate">{c.plantName}</span>
                         <span className={`${c.coverage < 15 ? 'text-rose-600 dark:text-rose-400' : c.coverage > 120 ? 'text-emerald-600 dark:text-emerald-400' : 'text-navy-500 dark:text-slate-400'}`}>{c.coverage}d</span>
                         <span className="ml-auto tabular-nums text-navy-500 dark:text-slate-400">{money(c.stockValue)}</span>
-                        {c.coverage > 120 && <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">excess</span>}
+                        {c.coverage > 120 && <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10.5px] font-semibold text-emerald-600 dark:text-emerald-400">excess</span>}
                       </div>
                     ))}
                   </div>
                 )}
-                {ins.transferSavings > 0 && <div className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent-500/5 px-2.5 py-1.5 text-[11px] text-accent-700 dark:bg-accent-500/10 dark:text-accent-300"><ArrowLeftRight className="h-3.5 w-3.5" /> Transfer could save {money(ins.transferSavings)}.</div>}
+                {ins.transferSavings > 0 && <div className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent-500/5 px-2.5 py-1.5 text-[12.5px] text-accent-700 dark:bg-accent-500/10 dark:text-accent-300"><ArrowLeftRight className="h-3.5 w-3.5" /> Transfer could save {money(ins.transferSavings)}.</div>}
               </Panel>
 
               {/* Opportunity + act */}
               <Panel title="Opportunity">
                 {ins.opportunity ? (
                   <div>
-                    <div className="text-[13px] font-semibold text-amber-600 dark:text-amber-400">{money(ins.opportunity.savings)}</div>
-                    <div className="text-[11.5px] font-medium">{ins.opportunity.label}</div>
-                    <p className="mt-0.5 text-[11px] text-navy-500 dark:text-slate-400">{ins.opportunity.note}</p>
-                    <button onClick={act} className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 text-[11.5px] font-semibold text-white hover:bg-accent-600">Submit as action <ArrowRight className="h-3.5 w-3.5" /></button>
+                    <div className="text-[14.5px] font-semibold text-amber-600 dark:text-amber-400">{money(ins.opportunity.savings)}</div>
+                    <div className="text-[13px] font-medium">{ins.opportunity.label}</div>
+                    <p className="mt-0.5 text-[12.5px] text-navy-500 dark:text-slate-400">{ins.opportunity.note}</p>
+                    <button onClick={act} className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 text-[13px] font-semibold text-white hover:bg-accent-600">Submit as action <ArrowRight className="h-3.5 w-3.5" /></button>
                   </div>
-                ) : <div className="py-3 text-[11.5px] text-navy-500 dark:text-slate-400">No optimization opportunity — well-balanced.</div>}
+                ) : <div className="py-3 text-[13px] text-navy-500 dark:text-slate-400">No optimization opportunity — well-balanced.</div>}
               </Panel>
 
               {/* Duplicates + history */}
               <Panel title="Duplicates & history">
                 {ins.duplicates.length > 0 && (
                   <div className="mb-2">
-                    <div className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500"><Copy className="h-3 w-3" /> {ins.duplicates.length} potential duplicates</div>
-                    {ins.duplicates.slice(0, 3).map((d) => <div key={d.id} className="truncate text-[11px] text-navy-600 dark:text-slate-300">{d.id} · {d.plant_id} · {money(d.current_stock_value)}</div>)}
+                    <div className="mb-1 flex items-center gap-1 text-[11.5px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500"><Copy className="h-3 w-3" /> {ins.duplicates.length} potential duplicates</div>
+                    {ins.duplicates.slice(0, 3).map((d) => <div key={d.id} className="truncate text-[12.5px] text-navy-600 dark:text-slate-300">{d.id} · {d.plant_id} · {money(d.current_stock_value)}</div>)}
                   </div>
                 )}
-                <div className="text-[10px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">Action history</div>
-                {requests.length === 0 ? <div className="text-[11px] text-navy-500 dark:text-slate-400">No actions raised yet.</div> : requests.map((r) => (
-                  <div key={r.id} className="flex items-center gap-1.5 text-[11px]"><Check className="h-3 w-3 text-emerald-500" /> {r.id} · <span className="text-navy-500 dark:text-slate-400">{r.stage}</span></div>
+                <div className="text-[11.5px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">Action history</div>
+                {requests.length === 0 ? <div className="text-[12.5px] text-navy-500 dark:text-slate-400">No actions raised yet.</div> : requests.map((r) => (
+                  <div key={r.id} className="flex items-center gap-1.5 text-[12.5px]"><Check className="h-3 w-3 text-emerald-500" /> {r.id} · <span className="text-navy-500 dark:text-slate-400">{r.stage}</span></div>
                 ))}
-                {ins.opportunity && <div className="mt-1.5 inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400"><FlaskConical className="h-3 w-3" /> potential {money(ins.opportunity.savings)}</div>}
+                {ins.opportunity && <div className="mt-1.5 inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 text-[11.5px] font-medium text-amber-600 dark:text-amber-400"><FlaskConical className="h-3 w-3" /> potential {money(ins.opportunity.savings)}</div>}
               </Panel>
             </div>
           </td>
@@ -214,15 +214,15 @@ function MaterialRow({ m, open, onToggle }: { m: Material; open: boolean; onTogg
 function Mini({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: 'rose' }) {
   return (
     <div className="rounded-lg border border-navy-100 bg-white px-2.5 py-1.5 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className="text-[9px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
-      <div className={`text-[14px] font-semibold ${tone === 'rose' ? 'text-rose-600 dark:text-rose-400' : ''}`}>{value}{sub && <span className="ml-0.5 text-[9px] font-normal text-navy-400 dark:text-slate-500">{sub}</span>}</div>
+      <div className="text-[10.5px] uppercase tracking-wide text-navy-400 dark:text-slate-500">{label}</div>
+      <div className={`text-[15.5px] font-semibold ${tone === 'rose' ? 'text-rose-600 dark:text-rose-400' : ''}`}>{value}{sub && <span className="ml-0.5 text-[10.5px] font-normal text-navy-400 dark:text-slate-500">{sub}</span>}</div>
     </div>
   );
 }
 function Panel({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className="mb-2 flex flex-wrap items-baseline gap-x-2"><span className="text-[12px] font-semibold">{title}</span>{sub && <span className="text-[10.5px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
+      <div className="mb-2 flex flex-wrap items-baseline gap-x-2"><span className="text-[13.5px] font-semibold">{title}</span>{sub && <span className="text-[12px] text-navy-400 dark:text-slate-500">{sub}</span>}</div>
       {children}
     </div>
   );

@@ -94,8 +94,8 @@ export default function OpportunityFinder({ plantIds }: { plantIds: string[] }) 
   return (
     <div className="px-6 py-5">
       <div className="mb-4">
-        <h1 className="text-[19px] font-semibold tracking-tight">Opportunity Finder</h1>
-        <p className="text-[12.5px] text-navy-500 dark:text-slate-500">{totalCount} opportunities · {money(totalValue)} addressable · {money(totalSavings)} potential savings</p>
+        <h1 className="text-[20px] font-semibold tracking-tight">Opportunity Finder</h1>
+        <p className="text-[14px] text-navy-500 dark:text-slate-500">{totalCount} opportunities · {money(totalValue)} addressable · {money(totalSavings)} potential savings</p>
       </div>
 
       {/* Group tiles */}
@@ -106,11 +106,11 @@ export default function OpportunityFinder({ plantIds }: { plantIds: string[] }) 
             <button key={g.key} onClick={() => setSel(g.key)} className={`rounded-xl border bg-white p-4 text-left transition-all hover:shadow-md dark:bg-[#211c33] ${active ? 'border-accent-400 ring-2 ring-accent-500/20 dark:border-accent-500' : 'border-navy-100 dark:border-slate-800'}`}>
               <div className="flex items-center justify-between">
                 <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${TONE[meta.tone]}`}><Icon className="h-4.5 w-4.5" style={{ width: 18, height: 18 }} /></span>
-                <span className="rounded-full bg-navy-100 px-2 py-0.5 text-[10px] font-semibold text-navy-500 dark:bg-slate-800 dark:text-slate-400">{g.count}</span>
+                <span className="rounded-full bg-navy-100 px-2 py-0.5 text-[11.5px] font-semibold text-navy-500 dark:bg-slate-800 dark:text-slate-400">{g.count}</span>
               </div>
-              <div className="mt-2.5 text-[13.5px] font-semibold">{g.label}</div>
-              <div className="text-[10.5px] text-navy-400 dark:text-slate-500">{g.desc}</div>
-              <div className="mt-1.5 text-[12px] font-semibold text-amber-600 dark:text-amber-400">{money(g.items.reduce((s, i) => s + i.savings, 0))} savings · {money(g.value)}</div>
+              <div className="mt-2.5 text-[15px] font-semibold">{g.label}</div>
+              <div className="text-[12px] text-navy-400 dark:text-slate-500">{g.desc}</div>
+              <div className="mt-1.5 text-[13.5px] font-semibold text-amber-600 dark:text-amber-400">{money(g.items.reduce((s, i) => s + i.savings, 0))} savings · {money(g.value)}</div>
             </button>
           );
         })}
@@ -119,17 +119,17 @@ export default function OpportunityFinder({ plantIds }: { plantIds: string[] }) 
       {/* Selected group items */}
       <div className="rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="text-[13px] font-semibold">{group.label}</span>
-          <span className="text-[11px] text-navy-400 dark:text-slate-500">{group.count} opportunities · suggested action: <b>{ACTION_LABEL[group.actionKind as ActionKind]}</b></span>
+          <span className="text-[14.5px] font-semibold">{group.label}</span>
+          <span className="text-[12.5px] text-navy-400 dark:text-slate-500">{group.count} opportunities · suggested action: <b>{ACTION_LABEL[group.actionKind as ActionKind]}</b></span>
           <div className="ml-auto flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-2.5 py-1 dark:border-slate-700 dark:bg-slate-900">
             <Search className="h-3.5 w-3.5 text-navy-400" />
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" className="w-40 border-none bg-transparent text-[12px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" className="w-40 border-none bg-transparent text-[13.5px] outline-none placeholder:text-navy-400 dark:text-slate-200" />
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-[12px]">
+          <table className="w-full min-w-[720px] text-[13.5px]">
             <thead>
-              <tr className="border-b border-navy-100 text-left text-[10px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
+              <tr className="border-b border-navy-100 text-left text-[11.5px] uppercase tracking-wide text-navy-400 dark:border-slate-800 dark:text-slate-500">
                 <th className="px-3 py-2 font-semibold">Material</th>
                 <th className="px-3 py-2 font-semibold">Plant</th>
                 <th className="px-3 py-2 font-semibold">Signal</th>
@@ -143,22 +143,22 @@ export default function OpportunityFinder({ plantIds }: { plantIds: string[] }) 
                 const m = it.material; const done = acted[m.id];
                 return (
                   <tr key={m.id} className="border-b border-navy-50 last:border-0 hover:bg-navy-50/50 dark:border-slate-800/60 dark:hover:bg-slate-800/30">
-                    <td className="px-3 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[10px] text-navy-400 dark:text-slate-500">{m.id}</div></td>
+                    <td className="px-3 py-2.5"><div className="font-medium">{m.description}</div><div className="font-mono text-[11.5px] text-navy-400 dark:text-slate-500">{m.id}</div></td>
                     <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{m.plant_id}</td>
                     <td className="px-3 py-2.5 text-navy-500 dark:text-slate-400">{it.note}</td>
                     <td className="px-3 py-2.5 text-right tabular-nums">{money(m.current_stock_value)}</td>
                     <td className="px-3 py-2.5 text-right font-semibold text-amber-600 dark:text-amber-400">{money(it.savings)}</td>
                     <td className="px-3 py-2.5 text-right">
                       {done ? (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400"><Check className="h-3.5 w-3.5" /> Actioned</span>
+                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2.5 py-1.5 text-[12.5px] font-semibold text-emerald-600 dark:text-emerald-400"><Check className="h-3.5 w-3.5" /> Actioned</span>
                       ) : (
-                        <button onClick={() => act(group, it)} className="inline-flex items-center gap-1 rounded-md bg-accent-500 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-accent-600">Act <ArrowRight className="h-3.5 w-3.5" /></button>
+                        <button onClick={() => act(group, it)} className="inline-flex items-center gap-1 rounded-md bg-accent-500 px-3 py-1.5 text-[12.5px] font-semibold text-white hover:bg-accent-600">Act <ArrowRight className="h-3.5 w-3.5" /></button>
                       )}
                     </td>
                   </tr>
                 );
               })}
-              {items.length === 0 && <tr><td colSpan={6} className="px-3 py-10 text-center text-[12.5px] text-navy-500 dark:text-slate-400">{search ? 'No matches.' : 'No opportunities in this group. 👍'}</td></tr>}
+              {items.length === 0 && <tr><td colSpan={6} className="px-3 py-10 text-center text-[14px] text-navy-500 dark:text-slate-400">{search ? 'No matches.' : 'No opportunities in this group. 👍'}</td></tr>}
             </tbody>
           </table>
         </div>
