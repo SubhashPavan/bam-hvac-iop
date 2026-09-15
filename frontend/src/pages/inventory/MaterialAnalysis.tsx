@@ -30,15 +30,6 @@ function Panel({ title, sub, children, className }: { title?: string; sub?: stri
     </div>
   );
 }
-function Stat({ value, label, sub, tone }: { value: string; label: string; sub?: string; tone?: string }) {
-  return (
-    <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
-      <div className={`text-[19.5px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{value}</div>
-      <div className="mt-1.5 text-[12.5px] font-medium">{label}</div>
-      {sub && <div className="text-[11px] text-navy-400 dark:text-slate-500">{sub}</div>}
-    </div>
-  );
-}
 const Chip = ({ k, v, tone }: { k: string; v: string; tone?: string }) => (
   <span className="inline-flex items-center gap-1 rounded-md border border-navy-100 bg-white px-2 py-1 text-[12px] dark:border-slate-700 dark:bg-[#0e1730]">
     <span className="text-navy-400 dark:text-slate-500">{k}</span><b className={tone ? TT[tone] : ''}>{v}</b>
@@ -243,44 +234,39 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
         <div className="flex h-64 items-center justify-center text-[14.5px] text-navy-400 dark:text-slate-500">Analysis unavailable — the backend is not reachable.</div>
       ) : (
         <div className="space-y-4">
-          {/* Policy stat row — the single stocking policy (safety stock / ROL / ROQ) */}
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
-            <Stat value={`${rate.toFixed(1)}`} label="Avg demand / mo" sub={`trend ${detail.trend_pct >= 0 ? '+' : ''}${detail.trend_pct}%`} tone={detail.trend_pct >= 0 ? 'mint' : 'rose'} />
-            <Stat value={pol ? String(pol.ss) : '—'} label="Safety stock" sub={pol ? money(pol.ssVal) : undefined} tone="violet" />
-            <Stat value={pol ? String(pol.rol) : '—'} label="Reorder level (ROL)" sub={pol ? `lead ${pol.lead}d` : undefined} />
-            <Stat value={pol ? String(pol.roq) : '—'} label="Reorder qty (ROQ)" sub={pol ? `class ${policy?.abc}` : undefined} />
-            <Stat value={`${material.coverage_days}d`} label="Current coverage" sub={pol ? `SL ${pol.sl}%` : undefined} tone={coverBad ? 'amber' : 'mint'} />
-            <Stat value={String(material.on_hand_qty)} label="On-hand units" sub={money(material.current_stock_value)} />
-          </div>
-
-          {/* Full stocking policy — our standard replenishment method */}
-          {policy && (
-            <Panel title="Inventory stocking policy" sub="service-level safety stock · class-based reorder qty · 30-day lead">
-              {!policy.active ? (
-                <div className="text-[13.5px] text-navy-400 dark:text-slate-500">Inactive material — no consumption, receipts or stock on record.</div>
-              ) : (
-                <>
-                  <div className="mb-3 flex flex-wrap gap-1.5">
-                    <PolicyChip k="FSN" v={String(policy.fsn)} />
-                    <PolicyChip k="CV" v={`${policy.cv} · ${policy.cv_band}`} />
-                    <PolicyChip k="ABC" v={String(policy.abc)} />
-                    <PolicyChip k="Service level" v={`${(Number(policy.service_level) * 100).toFixed(0)}% (z ${policy.z_score})`} />
-                    <PolicyChip k="Unit rate" v={typeof policy.unit_rate === 'number' ? `$${policy.unit_rate}` : String(policy.unit_rate)} />
-                    <PolicyChip k="Lead time" v={`${policy.lead_time_days}d`} />
-                    <PolicyChip k="Ledger" v={String(policy.data_status)} tone={policy.data_status === 'Data incorrect' ? 'rose' : 'mint'} />
-                    {policy.data_status === 'Data incorrect' && <PolicyChip k="Error qty" v={String(policy.data_error_qty)} tone="rose" />}
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                    <PolicyStat label="Safety stock" qty={policy.safety_stock} val={policy.ss_value} tone="violet" />
-                    <PolicyStat label="Reorder level (ROL)" qty={policy.rol} val={policy.rol_value} />
-                    <PolicyStat label="Maximum stock" qty={policy.max_stock} val={policy.max_value} tone="amber" />
-                    <PolicyStat label="Average stock" qty={policy.avg_stock} val={policy.avg_value} tone="mint" />
-                  </div>
-                  <div className="mt-2.5 text-[12px] text-navy-400 dark:text-slate-500">Annual consumption value {typeof policy.annual_consumption_value === 'number' ? money(policy.annual_consumption_value) : policy.annual_consumption_value} · consumption in {String(policy.consumption_months)} months · avg {policy.avg_monthly_consumption}/mo</div>
-                </>
-              )}
-            </Panel>
-          )}
+          {/* Inventory stocking policy — ONE view: classification + the full policy together */}
+          <Panel title="Inventory stocking policy" sub="service-level safety stock · class-based reorder qty · 30-day lead">
+            {!policy ? (
+              <div className="flex items-center gap-2 py-4 text-[13.5px] text-navy-400 dark:text-slate-500"><Spinner /> Computing the policy…</div>
+            ) : !policy.active ? (
+              <div className="text-[13.5px] text-navy-400 dark:text-slate-500">Inactive material — no consumption, receipts or stock on record.</div>
+            ) : (
+              <>
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  <PolicyChip k="FSN" v={String(policy.fsn)} />
+                  <PolicyChip k="CV" v={`${policy.cv} · ${policy.cv_band}`} />
+                  <PolicyChip k="ABC" v={String(policy.abc)} />
+                  <PolicyChip k="Service level" v={`${(Number(policy.service_level) * 100).toFixed(0)}% (z ${policy.z_score})`} />
+                  <PolicyChip k="Unit rate" v={typeof policy.unit_rate === 'number' ? `$${policy.unit_rate}` : String(policy.unit_rate)} />
+                  <PolicyChip k="Lead time" v={`${policy.lead_time_days}d`} />
+                  <PolicyChip k="Ledger" v={String(policy.data_status)} tone={policy.data_status === 'Data incorrect' ? 'rose' : 'mint'} />
+                  {policy.data_status === 'Data incorrect' && <PolicyChip k="Error qty" v={String(policy.data_error_qty)} tone="rose" />}
+                </div>
+                {/* one grid: the facts + the full replenishment policy, together */}
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
+                  <PolicyStat label="Avg demand / mo" qty={rate.toFixed(1)} val={`trend ${detail.trend_pct >= 0 ? '+' : ''}${detail.trend_pct}%`} tone={detail.trend_pct >= 0 ? 'mint' : 'rose'} />
+                  <PolicyStat label="On-hand units" qty={material.on_hand_qty} val={material.current_stock_value} />
+                  <PolicyStat label="Current coverage" qty={`${material.coverage_days}d`} val={`SL ${pol?.sl ?? '—'}%`} tone={coverBad ? 'amber' : 'mint'} />
+                  <PolicyStat label="Safety stock" qty={policy.safety_stock} val={policy.ss_value} tone="violet" />
+                  <PolicyStat label="Reorder level (ROL)" qty={policy.rol} val={policy.rol_value} />
+                  <PolicyStat label="Reorder qty (ROQ)" qty={policy.roq} val={policy.roq_value} />
+                  <PolicyStat label="Maximum stock" qty={policy.max_stock} val={policy.max_value} tone="amber" />
+                  <PolicyStat label="Average stock" qty={policy.avg_stock} val={policy.avg_value} tone="mint" />
+                </div>
+                <div className="mt-2.5 text-[12px] text-navy-400 dark:text-slate-500">Annual consumption value {typeof policy.annual_consumption_value === 'number' ? money(policy.annual_consumption_value) : policy.annual_consumption_value} · consumption in {String(policy.consumption_months)} months · avg {policy.avg_monthly_consumption}/mo</div>
+              </>
+            )}
+          </Panel>
 
           {/* Demand + forecast */}
           <Panel title="Demand & forecast" sub={`${detail.method} · history + ${detail.horizon_m}-mo forecast with confidence band`}>

@@ -100,11 +100,8 @@ def _one(m: dict) -> dict:
     r["cv"] = round(cv, 3) if cv is not None else 0.0
     r["cv_band"] = band
 
-    # Service level: 99% only for high-variability fast movers, else 95%
-    if band == "High Variation" and fsn == "Fast":
-        service_level, z = 0.99, Z_HIGH
-    else:
-        service_level, z = 0.95, Z_NORMAL
+    # Service level: 95% standard for all materials (z 1.645).
+    service_level, z = 0.95, Z_NORMAL
     r["service_level"] = service_level
     r["z_score"] = z
     r["lead_time_days"] = round(lead_days)

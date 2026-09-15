@@ -127,12 +127,18 @@ def detect_wide_mro(headers: list[str]) -> dict | None:
             "closing_stock": closing_stock, "closing_value": closing_value, "lead": lead}
 
 
-def transform_wide(rows: list[dict], mapping: dict, wide: dict) -> dict:
+def transform_wide(rows: list[dict], mapping: dict, wide: dict, default_plant: str | None = None) -> dict:
     """Silver transform for the wide MRO extract. Consumption columns are stored
     negative → converted to positive. Columns the file lacks (plant, category,
-    supplier, VED) are filled with deterministic dummy values."""
+    supplier, VED) are filled with deterministic dummy values — unless
+    `default_plant` is given, in which case every material goes to that one plant."""
+    forced = None
+    if default_plant:
+        pid = re.sub(r"[^A-Za-z0-9]+", "-", default_plant.strip()).strip("-").upper()[:24] or "PLANT-01"
+        forced = (pid, default_plant.strip(), "India")
     issues = [f"info: wide MRO extract — {len(wide['consumption'])} months of receipts & consumption; "
-              "plant/category/supplier/VED are dummy-filled (not in source)."]
+              + (f"all materials assigned to plant '{default_plant}'. " if default_plant
+                 else "plant/category/supplier/VED are dummy-filled (not in source).")]
     materials: list[dict] = []
     plants: dict[str, dict] = {}
     raw_series: dict[str, list[float]] = {}
@@ -146,13 +152,12 @@ def transform_wide(rows: list[dict], mapping: dict, wide: dict) -> dict:
         receipts = [max(0.0, _f(row.get(c, 0))) for c in wide["receipts"]]
         closing_stock = _f(row.get(wide["closing_stock"], 0)) if wide["closing_stock"] else 0.0
         closing_value = _f(row.get(wide["closing_value"], 0)) if wide["closing_value"] else 0.0
-        lead_months = _f(row.get(wide["lead"], 0)) if wide["lead"] else 1.0
-        lead_days = round(max(lead_months, 0.1) * 30.0) if lead_months else 30
+        lead_days = 30  # flat 30-day lead assumption
 
         cat = _pick(mid, "cat", _DUMMY_CATS)
         sup = _pick(mid, "sup", _DUMMY_SUPS)
         ved = _pick(mid, "ved", _DUMMY_VED)
-        pl_id, pl_name, pl_region = _pick(mid, "plant", _DUMMY_PLANTS)
+        pl_id, pl_name, pl_region = forced if forced else _pick(mid, "plant", _DUMMY_PLANTS)
         fsn = _fsn_from_series(consumption)
         xyz = _xyz_from_series(consumption)
         amd = round(sum(consumption) / max(1, len(consumption)), 2)
@@ -281,18 +286,19 @@ def _get(row: dict, mapping: dict, field: str, default=""):
     return row.get(h, default) if h else default
 
 
-def validate_transform(rows: list[dict], mapping: dict) -> dict:
+def validate_transform(rows: list[dict], mapping: dict, default_plant: str | None = None) -> dict:
     """Silver: coerce, default, derive → plants + materials + series + recs (+ issues).
 
     When the file carries a demand history (M1..Mn or dated columns) we use the
     REAL series — every downstream computation (FSN/XYZ classification, safety
     stock, reorder point, EOQ, forecast) then runs on the customer's history.
-    Only when no history is present do we synthesize one.
+    Only when no history is present do we synthesize one. `default_plant` forces
+    every material onto one named plant.
     """
     headers = list(rows[0].keys()) if rows else []
     wide = detect_wide_mro(headers)
     if wide:
-        return transform_wide(rows, mapping, wide)
+        return transform_wide(rows, mapping, wide, default_plant=default_plant)
 
     issues: list[str] = []
     materials: list[dict] = []

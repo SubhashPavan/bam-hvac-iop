@@ -61,7 +61,7 @@ async def ingest_csv(body: IngestRequest, session: AsyncSession = Depends(get_se
         if missing:
             raise HTTPException(422, f"Missing required field mapping(s): {', '.join(missing)}")
 
-    gold = pipeline.validate_transform(rows, mapping)
+    gold = pipeline.validate_transform(rows, mapping, default_plant=body.plant)
     source_id = None
     if body.activate:
         src = await pipeline.activate(session, gold, filename=body.filename,

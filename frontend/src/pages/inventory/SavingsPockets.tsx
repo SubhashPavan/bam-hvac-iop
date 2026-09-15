@@ -169,13 +169,22 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
         </div>
       </div>
 
-      {/* KPI band */}
-      <div className="mb-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-8">
-        <Kpi value={money(totalInv)} label="Total inventory" sub={`${k.sku_count || 0} SKUs`} />
-        <Kpi value={money(k.total_opportunity || 0)} label="Total opportunity" tone="amber" />
+      {/* Reconciliation band — Total = Optimized + Excess + Obsolete (it all adds up) */}
+      <div className="mb-1.5 text-[11.5px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">How your {money(totalInv)} breaks down</div>
+      <div className="mb-3 flex flex-wrap items-stretch gap-2">
+        <div className="min-w-[150px] flex-1"><Kpi value={money(totalInv)} label="Total inventory" sub={`${k.sku_count || 0} SKUs`} /></div>
+        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">=</div>
+        <div className="min-w-[150px] flex-1"><Kpi value={money(optimized)} label="Optimized" sub="right-sized · keep" tone="mint" /></div>
+        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[150px] flex-1"><Kpi value={money(surplus)} label="Excess / overstock" sub="reduce · rebalance" tone="amber" /></div>
+        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[150px] flex-1"><Kpi value={money(obsolete)} label="Obsolete" sub="write-off" tone="rose" /></div>
+      </div>
+
+      {/* Opportunity & health */}
+      <div className="mb-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+        <Kpi value={money(k.total_opportunity || 0)} label="Total opportunity" sub="excess + obsolete" tone="amber" />
         <Kpi value={money(k.working_capital_release || 0)} label="Working capital" sub="releasable" tone="mint" />
-        <Kpi value={money(surplus)} label="Surplus / excess" tone="violet" />
-        <Kpi value={money(obsolete)} label="Obsolete" tone="rose" />
         <Kpi value={money(k.safety_stock || 0)} label="Safety stock" sub="optimal" />
         <Kpi value={`${k.service_level || 0}%`} label="Service level" sub={`turns ${k.inventory_turns || 0}×`} tone={k.service_level < 92 ? 'amber' : 'mint'} />
         <Kpi value={String(k.at_risk_skus || 0)} label="At stockout risk" tone="rose" />

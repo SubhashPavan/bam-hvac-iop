@@ -27,6 +27,7 @@ class IngestRequest(BaseModel):
     csv_text: str
     mapping: Optional[dict[str, Optional[str]]] = None  # field -> header; auto if omitted
     activate: bool = True
+    plant: Optional[str] = None  # force all materials onto one named plant (wide extracts have no plant col)
 
 
 class IngestResponse(BaseModel):
