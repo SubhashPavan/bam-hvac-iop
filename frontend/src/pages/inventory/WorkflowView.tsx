@@ -13,6 +13,7 @@ export default function WorkflowView() {
   const requests = useRequestStore((s) => s.requests);
   const decide = useRequestStore((s) => s.decide);
   const sendBack = useRequestStore((s) => s.sendBack);
+  const clearAll = useRequestStore((s) => s.clearAll);
   const [filter, setFilter] = useState<Filter>('all');
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -43,9 +44,15 @@ export default function WorkflowView() {
 
   return (
     <div className="px-6 py-5">
-      <div className="mb-4">
-        <h1 className="text-[20px] font-semibold tracking-tight">Approval workflow</h1>
-        <p className="text-[14px] text-navy-500 dark:text-slate-500">Plant Manager → Maintenance Planner → Finance Controller → Regional → Global · approve, send back, or reject at your stage</p>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-[20px] font-semibold tracking-tight">Approval workflow</h1>
+          <p className="text-[14px] text-navy-500 dark:text-slate-500">Plant Manager → Maintenance Planner → Finance Controller → Regional → Global · approve, send back, or reject at your stage</p>
+        </div>
+        <button onClick={() => { if (confirm('Clear all workflow requests? This cannot be undone.')) clearAll(); }}
+          className="shrink-0 rounded-lg border border-navy-200 px-3 py-1.5 text-[12.5px] font-medium text-navy-600 hover:border-rose-300 hover:text-rose-600 dark:border-slate-700 dark:text-slate-300 dark:hover:text-rose-400">
+          Clear all
+        </button>
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">

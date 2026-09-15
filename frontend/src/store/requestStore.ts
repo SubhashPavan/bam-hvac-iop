@@ -53,6 +53,7 @@ interface RequestState {
   decide: (id: string, decision: 'approved' | 'rejected', actor: string, comment?: string) => void;
   sendBack: (id: string, actor: string, comment?: string) => void;
   addComment: (id: string, actor: string, comment: string) => void;
+  clearAll: () => void;
 }
 
 export const useRequestStore = create<RequestState>()(
@@ -99,7 +100,15 @@ export const useRequestStore = create<RequestState>()(
       addComment: (id, actor, comment) => set((s) => ({
         requests: s.requests.map((q) => q.id === id ? { ...q, history: [...q.history, { stage: q.stage, actor, decision: 'commented' as const, comment, at: now() }] } : q),
       })),
+      clearAll: () => set({ requests: [], seq: 1, draft: null, pendingSnapshot: null }),
     }),
-    { name: 'inv-opt-requests', partialize: (s) => ({ requests: s.requests, seq: s.seq }) },
+    {
+      name: 'inv-opt-requests',
+      // Bump when the underlying dataset changes so stale requests (referencing
+      // old materials/plants) are dropped instead of rehydrated.
+      version: 2,
+      migrate: () => ({ requests: [], seq: 1 }),
+      partialize: (s) => ({ requests: s.requests, seq: s.seq }),
+    },
   ),
 );
