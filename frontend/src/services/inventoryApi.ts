@@ -9,8 +9,12 @@ import type { SageBlock, SageItem, SageReply } from '../pages/inventory/sageEngi
 import type { ActionKind } from '../store/requestStore';
 import type { Material, Plant, Recommendation } from '../types/inventory';
 
-const API_BASE =
-  import.meta.env.VITE_INVENTORY_API_URL || 'http://localhost:8020/api/v1';
+// Normalize the base so it always ends in /api/v1 — tolerates a build-arg that
+// omits the suffix (a common deploy footgun that silently 404s every call).
+const _RAW_BASE = import.meta.env.VITE_INVENTORY_API_URL || 'http://localhost:8020/api/v1';
+const API_BASE = /\/api\/v\d+\/?$/.test(_RAW_BASE)
+  ? _RAW_BASE.replace(/\/$/, '')
+  : _RAW_BASE.replace(/\/$/, '') + '/api/v1';
 
 // ── Global in-flight tracker ─────────────────────────────────────────
 // Every request bumps a counter; the top progress bar + panel loaders
