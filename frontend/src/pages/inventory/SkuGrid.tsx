@@ -6,16 +6,23 @@ import type { ForecastSummaryRow } from '../../services/inventoryApi';
 const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 const PATTERN_TONE: Record<string, string> = { smooth: 'text-emerald-600 dark:text-emerald-400', intermittent: 'text-violet-600 dark:text-violet-400', erratic: 'text-amber-600 dark:text-amber-400', lumpy: 'text-rose-600 dark:text-rose-400', no_demand: 'text-rose-600 dark:text-rose-400' };
 
+export const isCritical = (m: Material) => m.ved === 'Vital' || m.criticality_score >= 75;
+
 export function statusOf(m: Material, s?: ForecastSummaryRow) {
-  if (s && s.demand_pattern === 'no_demand' && m.fsn === 'Non-moving' && m.current_stock_value > 2000) return { label: 'Dispose', tone: 'bg-rose-500/15 text-rose-600 dark:text-rose-400' };
+  // Non-moving with no demand: critical spares are retained (insurance), only low-criticality is disposable.
+  if (s && s.demand_pattern === 'no_demand' && m.fsn === 'Non-moving' && m.current_stock_value > 2000) {
+    return isCritical(m)
+      ? { label: 'Retain', tone: 'bg-sky-500/15 text-sky-600 dark:text-sky-400' }
+      : { label: 'Dispose', tone: 'bg-rose-500/15 text-rose-600 dark:text-rose-400' };
+  }
   if (s ? m.on_hand_qty < s.reorder_point : m.coverage_days < 20) return { label: 'Reorder', tone: 'bg-amber-500/15 text-amber-600 dark:text-amber-400' };
   if (s ? s.savings > 5000 : m.coverage_days > 180) return { label: 'Reduce', tone: 'bg-violet-500/15 text-violet-600 dark:text-violet-400' };
   return { label: 'Healthy', tone: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' };
 }
 
 type SortKey = 'material' | 'pattern' | 'pred' | 'soh' | 'ss' | 'rop' | 'roq' | 'target' | 'cover' | 'fcst' | 'savings' | 'action';
-const STATUS_RANK: Record<string, number> = { Healthy: 0, Reduce: 1, Reorder: 2, Dispose: 3 };
-const ACTIONS = ['All', 'Reduce', 'Reorder', 'Dispose', 'Healthy'];
+const STATUS_RANK: Record<string, number> = { Healthy: 0, Retain: 1, Reduce: 2, Reorder: 3, Dispose: 4 };
+const ACTIONS = ['All', 'Reduce', 'Reorder', 'Dispose', 'Retain', 'Healthy'];
 
 function sortVal(m: Material, s: ForecastSummaryRow | undefined, key: SortKey): number | string {
   switch (key) {

@@ -178,7 +178,10 @@ def build_opportunities(pairs: list[tuple[Material, list]], *, min_value: float 
         opt[m.id] = (m, o)
         cur = m.current_stock_value
         if (o["pattern"] == "no_demand" or o["rate"] < 0.05) and m.fsn == "Non-moving":
-            if cur >= min_value:
+            # Critical spares (Vital / high-criticality) are retained as insurance
+            # even with no demand — only low-criticality dead stock is disposable.
+            is_critical = m.ved == "Vital" or m.criticality_score >= 75
+            if cur >= min_value and not is_critical:
                 buckets["obsolete_stock"].append(_obsolete(m, o))
             continue
         if o["excess_units"] > 0:

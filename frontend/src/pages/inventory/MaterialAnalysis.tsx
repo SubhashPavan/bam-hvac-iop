@@ -14,6 +14,7 @@ import {
 import { getForecast, getMaterialInsight, getInventoryPolicy, type PolicyRow } from '../../services/inventoryApi';
 import { useDebounced } from './useLiveData';
 import { Spinner } from './LoadingBar';
+import { isCritical } from './SkuGrid';
 
 const C = { indigo: '#6366f1', amber: '#f59e0b', mint: '#22c55e', rose: '#f43f5e', violet: '#8b5cf6' };
 const AXIS = 'text-navy-400 dark:text-slate-500';
@@ -134,7 +135,10 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
     const onHand = material.on_hand_qty;
     const unit = pol.unitRate;
     if (policy.fsn === 'Non-moving' && Number(policy.consumption_months) === 0 && material.current_stock_value > 2000) {
-      return { kind: 'dispose' as ActionKind, savings: material.current_stock_value, target: 0, tone: 'rose', why: `No consumption on record. Write-off recovers ${money(material.current_stock_value)}.` };
+      if (isCritical(material)) {
+        return { kind: 'keep_unchanged' as const, savings: 0, target: 0, tone: 'mint', why: `No demand on record — but this is a critical spare (${material.ved}, criticality ${material.criticality_score}). Retain as insurance against production-down; do NOT dispose.` };
+      }
+      return { kind: 'dispose' as ActionKind, savings: material.current_stock_value, target: 0, tone: 'rose', why: `No consumption on record and low criticality (${material.ved}). Write-off recovers ${money(material.current_stock_value)}.` };
     }
     if (onHand > pol.max) {
       const savings = (onHand - pol.max) * unit;

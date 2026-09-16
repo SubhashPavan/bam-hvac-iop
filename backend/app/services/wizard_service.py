@@ -20,16 +20,23 @@ TIER_LABEL = {
 OPP_THRESHOLD = 1000.0
 ACTION_LABEL = {
     "reduce_stock": "Safety stock can be optimized",
-    "dispose": "Surplus / obsolete — write-off",
+    "dispose": "Non-moving & low-criticality — write-off",
+    "retain": "Critical spare — retain (no demand)",
     "reorder": "Below reorder point — replenish",
     "healthy": "Within the optimal band",
 }
 ACTION_NARR = {
     "reduce_stock": "hold safety stock above the optimal policy — trim to the reorder point to release working capital",
-    "dispose": "are non-moving with stock on hand — dispose / write-off to recover capital",
+    "dispose": "are non-moving, low-criticality dead stock — dispose / write-off to recover capital",
+    "retain": "are non-moving but critical (Vital / high-criticality) — retain as insurance spares despite no demand",
     "reorder": "sit below the reorder point and risk a stockout — replenish or rebalance to protect service",
     "healthy": "are within the healthy band — no action needed this cycle",
 }
+
+# A spare is a "keep even if dead" critical insurance item when it is Vital or
+# highly critical — you never scrap it just because it has not moved.
+def _is_critical(m: Material) -> bool:
+    return m.ved == "Vital" or m.criticality_score >= 75
 
 
 def _money(n: float) -> str:
@@ -46,14 +53,14 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         return {"kpis": {}, "cells": [], "insights": [], "tier": {}}
     tiers = {m.id: _tier(m) for m, _ in pairs}
     cells: dict[tuple, dict] = {}
-    inv = ss = surplus = obsolete = 0.0
+    inv = ss = surplus = obsolete = critical_retained = 0.0
     understock_ct = 0
 
     for m, series in pairs:
         o = optimal_target(m, series)
         key = (m.fsn, tiers[m.id])
         c = cells.setdefault(key, {"count": 0, "value": 0.0, "savings": 0.0, "opp_count": 0,
-                                   "excess": 0.0, "obsolete": 0.0, "understock": 0})
+                                   "excess": 0.0, "obsolete": 0.0, "critical": 0.0, "understock": 0})
         c["count"] += 1
         c["value"] += m.current_stock_value
         inv += m.current_stock_value
@@ -62,9 +69,14 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         sku_sav = 0.0
         needs_reorder = False
         if (o["pattern"] == "no_demand" or o["rate"] < 0.05) and m.fsn == "Non-moving":
-            sku_sav = m.current_stock_value
-            c["obsolete"] += sku_sav
-            obsolete += sku_sav
+            if _is_critical(m):
+                # Critical insurance spare — retain even with no demand, NOT a write-off.
+                c["critical"] += m.current_stock_value
+                critical_retained += m.current_stock_value
+            else:
+                sku_sav = m.current_stock_value
+                c["obsolete"] += sku_sav
+                obsolete += sku_sav
         elif o["excess_value"] > 0:
             sku_sav = o["excess_value"]
             c["excess"] += sku_sav
@@ -88,9 +100,10 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
                                   "opp_count": 0, "stock_value": 0, "savings": 0, "action": "none",
                                   "label": "", "narration": ""})
                 continue
-            action = ("dispose" if c["obsolete"] > c["excess"] else
+            action = ("dispose" if c["obsolete"] > 0 and c["obsolete"] >= c["excess"] and c["obsolete"] >= c["critical"] else
                       "reduce_stock" if c["excess"] > 0 else
-                      "reorder" if c["understock"] > 0 else "healthy")
+                      "reorder" if c["understock"] > 0 else
+                      "retain" if c["critical"] > 0 else "healthy")
             mv = "non-moving" if f == "Non-moving" else f"{f.lower()}-moving"
             narration = f"{TIER_LABEL[t]} {mv} SKUs that {ACTION_NARR[action]}."
             cell_list.append({"fsn": f, "tier": t, "tier_label": TIER_LABEL[t], "sku_count": c["count"],
@@ -106,6 +119,7 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
     kpis = {
         "total_inventory": round(inv, 0), "sku_count": n, "safety_stock": round(ss, 0),
         "surplus_stock": round(surplus, 0), "obsolete_stock": round(obsolete, 0),
+        "critical_retained_stock": round(critical_retained, 0),
         "total_opportunity": round(opportunity, 0),
         "working_capital_release": round(opportunity * 0.7, 0),
         "service_level": service, "at_risk_skus": understock_ct, "inventory_turns": turns,
@@ -113,7 +127,8 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
     insights = [
         f"{n} SKUs analyzed across the Fast/Slow/Non-moving × criticality matrix; {_money(opportunity)} total opportunity.",
         f"{_money(surplus)} of surplus/excess can be released by rightsizing safety stock to the optimal policy.",
-        f"{_money(obsolete)} sits in non-moving / obsolete SKUs — dispose or write-off candidates.",
+        f"{_money(obsolete)} in non-moving, low-criticality dead stock — dispose / write-off candidates.",
+        f"{_money(critical_retained)} in non-moving but critical spares — retained as insurance despite no demand.",
         f"{understock_ct} SKUs are below reorder point and at stockout risk — reorder or rebalance.",
     ]
     return {"kpis": kpis, "cells": cell_list, "insights": insights, "tier": tiers}
