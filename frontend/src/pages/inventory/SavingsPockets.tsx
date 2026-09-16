@@ -144,6 +144,10 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
   const obsolete = k.obsolete_stock || 0;
   const critical = k.critical_retained_stock || 0;
   const optimized = Math.max(0, totalInv - surplus - obsolete - critical);
+  const release = surplus + obsolete;                 // what you free up
+  const workingCap = k.working_capital_release || 0;  // ~70% recoverable
+  const addInvest = k.understock_investment || 0;     // € to top up under-stocked
+  const ssTarget = k.safety_stock || 0;               // recommended safety buffer
   const seg = (v: number) => (totalInv ? `${(v / totalInv) * 100}%` : '0%');
   const totalOpp = pockets.reduce((n, p) => n + p.savings, 0) || 1;
 
@@ -186,11 +190,18 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
         <div className="min-w-[130px] flex-1"><Kpi value={money(obsolete)} label="Obsolete (dispose)" sub="low-criticality write-off" tone="rose" /></div>
       </div>
 
+      {/* Derived from the equation — where the money goes */}
+      <div className="mb-3 rounded-xl border border-navy-100 bg-white px-4 py-3 text-[13px] leading-relaxed text-navy-700 dark:border-slate-800 dark:bg-[#211c33] dark:text-slate-200">
+        Free up <b className="text-amber-600 dark:text-amber-400">{money(release)}</b> — reduce {money(surplus)} excess + write off {money(obsolete)} obsolete — to release <b className="text-emerald-600 dark:text-emerald-400">{money(workingCap)}</b> of working capital.
+        Then <b className="text-accent-600 dark:text-accent-400">invest {money(addInvest)}</b> to top up under-stocked items to the <b>{money(ssTarget)}</b> safety-stock the policy needs. Critical spares ({money(critical)}) stay put.
+      </div>
+
       {/* Opportunity & health */}
-      <div className="mb-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
-        <Kpi value={money(k.total_opportunity || 0)} label="Total opportunity" sub="excess + obsolete" tone="amber" />
-        <Kpi value={money(k.working_capital_release || 0)} label="Working capital" sub="releasable" tone="mint" />
-        <Kpi value={money(k.safety_stock || 0)} label="Safety stock (target)" sub="recommended buffer" />
+      <div className="mb-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+        <Kpi value={money(k.total_opportunity || 0)} label="Freed-up opportunity" sub="excess + obsolete" tone="amber" />
+        <Kpi value={money(workingCap)} label="Working capital" sub="≈70% recoverable" tone="mint" />
+        <Kpi value={money(addInvest)} label="Top-up needed" sub="buy under-stocked" tone="accent" />
+        <Kpi value={money(ssTarget)} label="Safety stock (target)" sub="policy buffer" />
         <Kpi value={`${k.service_level || 0}%`} label="Service level" sub={`turns ${k.inventory_turns || 0}×`} tone={k.service_level < 92 ? 'amber' : 'mint'} />
         <Kpi value={String(k.at_risk_skus || 0)} label="At stockout risk" tone="rose" />
       </div>

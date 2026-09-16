@@ -59,7 +59,7 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         return {"kpis": {}, "cells": [], "insights": [], "tier": {}}
     tiers = {m.id: _tier(m) for m, _ in pairs}
     cells: dict[tuple, dict] = {}
-    inv = ss = surplus = obsolete = critical_retained = 0.0
+    inv = ss = surplus = obsolete = critical_retained = understock_inv = 0.0
     understock_ct = 0
 
     for m, series in pairs:
@@ -70,11 +70,13 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         c["count"] += 1
         c["value"] += m.current_stock_value
         inv += m.current_stock_value
-        # Safety stock consistent with the single stocking policy:
-        # ceil(z95 · σ(monthly consumption)) at a flat 30-day lead, valued at unit cost.
+        # Safety stock consistent with the single stocking policy: ceil(z95 · σ)
+        # units (flat 30-day lead) valued at the SAME unit rate the policy uses
+        # (closing value ÷ closing stock); zero-stock items have no unit rate.
         _cons = [max(0.0, float(x)) for x in series]
         _std = float(np.std(_cons)) if len(_cons) > 1 else 0.0
-        ss += math.ceil(_Z95 * _std) * m.unit_cost
+        _unit_rate = (m.current_stock_value / m.on_hand_qty) if (m.on_hand_qty > 0 and m.current_stock_value > 0) else 0.0
+        ss += math.ceil(_Z95 * _std) * _unit_rate
 
         sku_sav = 0.0
         needs_reorder = False
@@ -95,6 +97,8 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
             needs_reorder = True
             c["understock"] += 1
             understock_ct += 1
+            # € to buy to bring this item up to its policy target (new investment).
+            understock_inv += max(0.0, o["target_value"] - m.current_stock_value)
         c["savings"] += sku_sav
 
         is_p1 = m.ved == "Vital" or m.criticality_score >= 75
@@ -130,6 +134,7 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         "total_inventory": round(inv, 0), "sku_count": n, "safety_stock": round(ss, 0),
         "surplus_stock": round(surplus, 0), "obsolete_stock": round(obsolete, 0),
         "critical_retained_stock": round(critical_retained, 0),
+        "understock_investment": round(understock_inv, 0),
         "total_opportunity": round(opportunity, 0),
         "working_capital_release": round(opportunity * 0.7, 0),
         "service_level": service, "at_risk_skus": understock_ct, "inventory_turns": turns,
