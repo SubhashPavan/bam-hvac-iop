@@ -70,13 +70,16 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         c["count"] += 1
         c["value"] += m.current_stock_value
         inv += m.current_stock_value
-        # Safety stock consistent with the single stocking policy: ceil(z95 · σ)
-        # units (flat 30-day lead) valued at the SAME unit rate the policy uses
-        # (closing value ÷ closing stock); zero-stock items have no unit rate.
+        # Stocking policy (single source): safety stock = ceil(z95·σ), reorder level
+        # = floor(SS + avg monthly consumption) at a flat 30-day lead. Value at the
+        # SAME unit rate the policy uses (closing value ÷ closing stock).
         _cons = [max(0.0, float(x)) for x in series]
         _std = float(np.std(_cons)) if len(_cons) > 1 else 0.0
+        _avg = float(np.mean(_cons)) if _cons else 0.0
+        _ss_units = math.ceil(_Z95 * _std)
+        _rol_units = math.floor(_ss_units + _avg)
         _unit_rate = (m.current_stock_value / m.on_hand_qty) if (m.on_hand_qty > 0 and m.current_stock_value > 0) else 0.0
-        ss += math.ceil(_Z95 * _std) * _unit_rate
+        ss += _ss_units * _unit_rate
 
         sku_sav = 0.0
         needs_reorder = False
@@ -93,12 +96,13 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
             sku_sav = o["excess_value"]
             c["excess"] += sku_sav
             surplus += sku_sav
-        elif o["understocked"]:
+        elif m.on_hand_qty < _rol_units:
             needs_reorder = True
             c["understock"] += 1
             understock_ct += 1
-            # € to buy to bring this item up to its policy target (new investment).
-            understock_inv += max(0.0, o["target_value"] - m.current_stock_value)
+            # € to buy to bring this item up to its reorder level (new investment).
+            # Only where a unit rate exists (can't value a zero-stock item's cost).
+            understock_inv += max(0.0, _rol_units - m.on_hand_qty) * _unit_rate
         c["savings"] += sku_sav
 
         is_p1 = m.ved == "Vital" or m.criticality_score >= 75
