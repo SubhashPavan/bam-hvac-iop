@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { PLANTS, MATERIALS, classification, plannerKpis, plantTrends, type ClassDim } from '../../data/inventoryMock';
 import type { Material } from '../../types/inventory';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${Math.round(n)}`);
 const COLORS = ['#6366f1', '#f59e0b', '#f43f5e', '#22c55e', '#8b5cf6', '#0891b2'];
 const AXIS = 'text-navy-400 dark:text-slate-500';
 const GRID = 'text-navy-100 dark:text-slate-800';

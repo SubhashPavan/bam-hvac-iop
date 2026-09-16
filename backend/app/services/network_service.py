@@ -66,7 +66,7 @@ def build_pooling(pairs: list[tuple[Material, list]], plants: list | None = None
                     "from_coverage": em.coverage_days, "to_coverage": nm.coverage_days,
                     "rationale": (f"{cat} / {sup}: {em.plant_id} holds surplus while {nm.plant_id} is below "
                                   f"reorder on a {nm.ved} item — move ~{mv:.0f} units to avoid a "
-                                  f"${val:,.0f} purchase and protect service."),
+                                  f"€{val:,.0f} purchase and protect service."),
                     "action_seed": {
                         "materialId": em.id, "materialDesc": em.description, "plantId": em.plant_id,
                         "kind": "transfer", "currentValue": round(em.current_stock_value, 0),

@@ -33,7 +33,7 @@ ACTION_NARR = {
 
 
 def _money(n: float) -> str:
-    return f"${n / 1e6:.1f}M" if abs(n) >= 1e6 else f"${n / 1e3:.0f}K" if abs(n) >= 1e3 else f"${n:.0f}"
+    return f"€{n / 1e6:.1f}M" if abs(n) >= 1e6 else f"€{n / 1e3:.0f}K" if abs(n) >= 1e3 else f"€{n:.0f}"
 
 
 def _tier(m: Material) -> str:

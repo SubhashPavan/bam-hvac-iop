@@ -3,7 +3,7 @@ import { Brain, X, CheckCircle2, Loader2, ArrowRight, Sparkles } from 'lucide-re
 import type { DeepInsight } from '../../services/inventoryApi';
 import { Spinner } from './LoadingBar';
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 
 /** Compact metric strip derived from a section's data block. */
 function blockChips(block: { type: string; data: any } | null): { label: string; value: string; tone?: string }[] {

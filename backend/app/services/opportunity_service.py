@@ -38,7 +38,7 @@ def _seed(material_id, desc, plant, kind, cur, prop, savings, cash, why) -> dict
 def _obsolete(m: Material, o: dict) -> dict:
     cur = m.current_stock_value
     savings, cash = cur, round(cur * 0.6, 0)
-    why = (f"No/near-zero consumption ({o['pattern']}); {m.fsn} mover holding ${cur:,.0f}. "
+    why = (f"No/near-zero consumption ({o['pattern']}); {m.fsn} mover holding €{cur:,.0f}. "
            f"Write-off / disposal recovers working capital.")
     return {"id": f"opp-obs-{m.id}", "type": "obsolete_stock", "material_id": m.id,
             "material_desc": m.description, "plant_id": m.plant_id, "plant_ids": None,
@@ -97,7 +97,7 @@ def _transfers(opt: dict[str, tuple[Material, dict]], min_value: float) -> list[
             if move_value < min_value:
                 continue
             why = (f"{cat}/{sup}: move ~{move_units:.0f} units from {em.plant_id} (excess) to "
-                   f"{nm.plant_id} (below reorder for a {nm.ved} item) - avoids a ${move_value:,.0f} purchase.")
+                   f"{nm.plant_id} (below reorder for a {nm.ved} item) - avoids a €{move_value:,.0f} purchase.")
             out.append({"id": f"opp-xfer-{em.id}-{nm.id}", "type": "stock_transfer",
                         "material_id": em.id, "material_desc": em.description, "plant_id": em.plant_id,
                         "plant_ids": [em.plant_id, nm.plant_id], "category": cat,
@@ -155,7 +155,7 @@ def _supplier_consolidation(pairs: list[tuple[Material, list]], min_value: float
         if savings < min_value:
             continue
         primary = max(mats, key=lambda m: m.current_stock_value)
-        why = (f"{cat} at {plant} is split across {len(suppliers)} suppliers (${spend:,.0f} spend). "
+        why = (f"{cat} at {plant} is split across {len(suppliers)} suppliers (€{spend:,.0f} spend). "
                f"Consolidate for ~6% volume leverage.")
         out.append({"id": f"opp-sup-{plant}-{cat}".replace(" ", ""), "type": "supplier_consolidation",
                     "material_id": primary.id, "material_desc": f"{cat} - {len(suppliers)} suppliers",

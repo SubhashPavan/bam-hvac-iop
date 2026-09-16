@@ -55,7 +55,7 @@ async def narrate_material(material, detail: dict) -> dict:
             f"{material.ved}, criticality {material.criticality_score}. Demand: {detail['demand_pattern']} "
             f"via {detail['method']}, ~{detail['per_period_demand']}/mo, trend {detail['trend_pct']}%, "
             f"forecast accuracy {detail['accuracy']['model_accuracy']}%. On-hand {material.on_hand_qty} units "
-            f"(${material.current_stock_value:,.0f}), coverage {material.coverage_days}d. Optimal policy at "
+            f"(€{material.current_stock_value:,.0f}), coverage {material.coverage_days}d. Optimal policy at "
             f"{p['service_level'] * 100:.0f}% service: safety stock {p['safety_stock']:.0f}, reorder point "
             f"{p['reorder_point']:.0f}, reorder qty {p['reorder_qty']:.0f}, recommended coverage "
             f"{p['recommended_coverage_days']}d, lead time {p['lead_time_days']}d.\n\n"
@@ -83,12 +83,12 @@ async def narrate(matrix: dict) -> dict:
         client = _client()
         k = matrix["kpis"]
         rows = [f"- {c['fsn']} / {c['tier_label']} (key {c['fsn']}|{c['tier']}): "
-                f"{c['opp_count']} of {c['sku_count']} SKUs actionable, ${c['savings']:,.0f} savings, play={c['action']}"
+                f"{c['opp_count']} of {c['sku_count']} SKUs actionable, €{c['savings']:,.0f} savings, play={c['action']}"
                 for c in matrix["cells"] if c["sku_count"]]
         summary = (
-            f"Portfolio: ${k['total_inventory']:,.0f} inventory across {k['sku_count']} SKUs; "
-            f"${k['total_opportunity']:,.0f} total opportunity (${k['surplus_stock']:,.0f} surplus, "
-            f"${k['obsolete_stock']:,.0f} obsolete); {k['at_risk_skus']} SKUs below reorder; "
+            f"Portfolio: €{k['total_inventory']:,.0f} inventory across {k['sku_count']} SKUs; "
+            f"€{k['total_opportunity']:,.0f} total opportunity (€{k['surplus_stock']:,.0f} surplus, "
+            f"€{k['obsolete_stock']:,.0f} obsolete); {k['at_risk_skus']} SKUs below reorder; "
             f"service {k['service_level']}%, turns {k['inventory_turns']}x.\n\nMatrix cells:\n" + "\n".join(rows)
         )
         instruction = (

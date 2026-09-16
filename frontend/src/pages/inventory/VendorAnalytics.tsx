@@ -4,7 +4,7 @@ import { getVendors } from '../../services/inventoryApi';
 import { useLiveOrMock } from './useLiveData';
 import { TopProgressBar } from './LoadingBar';
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 
 function Kpi({ icon: Icon, value, label, sub, tone }: { icon: typeof Truck; value: string; label: string; sub?: string; tone?: string }) {
   return (

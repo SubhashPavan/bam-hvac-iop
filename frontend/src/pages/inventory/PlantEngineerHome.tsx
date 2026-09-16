@@ -6,7 +6,7 @@ import {
 import { MATERIALS, RECOMMENDATIONS, PLANTS, MY_PLANTS } from '../../data/inventoryMock';
 
 const BASE = '/accelerator/inventory-optimization';
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 const VED_TONE: Record<string, string> = {
   Vital: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
   Essential: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',

@@ -5,7 +5,7 @@ import { useLiveOrMock } from './useLiveData';
 import { useRequestStore, type ActionSeed } from '../../store/requestStore';
 import { TopProgressBar } from './LoadingBar';
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 const VED_TONE: Record<string, string> = { Vital: 'bg-rose-500/15 text-rose-600 dark:text-rose-400', Essential: 'bg-amber-500/15 text-amber-600 dark:text-amber-400', Desirable: 'bg-navy-100 text-navy-500 dark:bg-slate-700 dark:text-slate-300' };
 
 function Kpi({ icon: Icon, value, label, sub, tone }: { icon: typeof Coins; value: string; label: string; sub?: string; tone?: string }) {

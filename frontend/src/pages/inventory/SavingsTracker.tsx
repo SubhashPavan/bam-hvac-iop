@@ -7,7 +7,7 @@ import { useRequestStore, ACTION_LABEL, STAGE_LABEL } from '../../store/requestS
 import { useLiveOrMock } from './useLiveData';
 import { getSavingsMatrix } from '../../services/inventoryApi';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(1)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(1)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(0)}K` : `€${Math.round(n)}`);
 const plantName = (id: string) => PLANTS.find((p) => p.id === id)?.name || id;
 const C = { indigo: '#6366f1', amber: '#f59e0b', mint: '#22c55e', rose: '#f43f5e', violet: '#8b5cf6', cyan: '#0891b2' };
 const AXIS = 'text-navy-400 dark:text-slate-500';

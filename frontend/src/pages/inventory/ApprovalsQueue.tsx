@@ -4,7 +4,7 @@ import { RECOMMENDATIONS } from '../../data/inventoryMock';
 import { REC_TYPE_LABEL, type Recommendation, type WorkflowStatus, type RecommendationType } from '../../types/inventory';
 import { useInvAccess } from '../../data/inventoryAccess';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 
 const STAGES: { key: string; role: string; awaiting: WorkflowStatus }[] = [
   { key: 'pending', role: 'Plant Engineer', awaiting: 'pending' },

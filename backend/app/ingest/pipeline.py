@@ -419,7 +419,7 @@ def derive_recommendations(materials: list[dict], series_map: dict) -> list[dict
         cur = m["current_stock_value"]
         if o["pattern"] == "no_demand" and m["fsn"] == "Non-moving" and cur > 3000:
             rtype, rec_val = "dispose", 0.0
-            reason = f"No consumption on record; {m['fsn']} item holding ${cur:,.0f} - write-off candidate."
+            reason = f"No consumption on record; {m['fsn']} item holding €{cur:,.0f} - write-off candidate."
         elif o["excess_value"] > 3000:
             rtype, rec_val = "reduce_stock", o["target_value"]
             reason = f"On-hand {m['on_hand_qty']} vs optimal {o['target_units']:.0f} ({o['pattern']} demand) - reduce."

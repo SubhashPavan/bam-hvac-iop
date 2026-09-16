@@ -6,7 +6,7 @@ import {
 import { RECOMMENDATIONS } from '../../data/inventoryMock';
 import { type Recommendation, type RecommendationType } from '../../types/inventory';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 
 const TYPE_META: Record<RecommendationType, { icon: typeof Check; verb: string; tone: string; dot: string }> = {
   reduce_stock: { icon: TrendingDown, verb: 'Reduce stock', tone: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-500' },

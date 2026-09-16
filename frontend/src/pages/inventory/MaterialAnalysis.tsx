@@ -19,7 +19,7 @@ const C = { indigo: '#6366f1', amber: '#f59e0b', mint: '#22c55e', rose: '#f43f5e
 const AXIS = 'text-navy-400 dark:text-slate-500';
 const GRID = 'text-navy-100 dark:text-slate-800';
 const tip = { fontSize: 11, borderRadius: 8, border: '1px solid rgba(120,120,140,0.2)' };
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(2)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(2)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(1)}K` : `€${Math.round(n)}`);
 const TT: Record<string, string> = { rose: 'text-rose-600 dark:text-rose-400', amber: 'text-amber-600 dark:text-amber-400', mint: 'text-emerald-600 dark:text-emerald-400', violet: 'text-violet-600 dark:text-violet-400' };
 
 function Panel({ title, sub, children, className }: { title?: string; sub?: string; children: React.ReactNode; className?: string }) {
@@ -41,7 +41,7 @@ const PolicyChip = ({ k, v, tone }: { k: string; v: string; tone?: string }) => 
   </span>
 );
 function PolicyStat({ label, qty, val, tone }: { label: string; qty: number | string; val: number | string; tone?: string }) {
-  const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+  const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
   return (
     <div className="rounded-xl border border-navy-100 bg-white p-3 dark:border-slate-800 dark:bg-[#211c33]">
       <div className={`text-[19.5px] font-semibold leading-none tracking-tight ${tone ? TT[tone] : ''}`}>{typeof qty === 'number' ? Math.round(qty) : qty}</div>
@@ -247,7 +247,7 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
                   <PolicyChip k="CV" v={`${policy.cv} · ${policy.cv_band}`} />
                   <PolicyChip k="ABC" v={String(policy.abc)} />
                   <PolicyChip k="Service level" v={`${(Number(policy.service_level) * 100).toFixed(0)}% (z ${policy.z_score})`} />
-                  <PolicyChip k="Unit rate" v={typeof policy.unit_rate === 'number' ? `$${policy.unit_rate}` : String(policy.unit_rate)} />
+                  <PolicyChip k="Unit rate" v={typeof policy.unit_rate === 'number' ? `€${policy.unit_rate}` : String(policy.unit_rate)} />
                   <PolicyChip k="Lead time" v={`${policy.lead_time_days}d`} />
                   <PolicyChip k="Ledger" v={String(policy.data_status)} tone={policy.data_status === 'Data incorrect' ? 'rose' : 'mint'} />
                   {policy.data_status === 'Data incorrect' && <PolicyChip k="Error qty" v={String(policy.data_error_qty)} tone="rose" />}

@@ -13,7 +13,7 @@ import SkuGrid, { statusOf } from './SkuGrid';
 
 const STATUS_KIND: Record<string, ActionKind> = { Dispose: 'dispose', Reorder: 'increase_stock', Reduce: 'reduce_stock' };
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 const TT: Record<string, string> = { rose: 'text-rose-600 dark:text-rose-400', amber: 'text-amber-600 dark:text-amber-400', mint: 'text-emerald-600 dark:text-emerald-400', violet: 'text-violet-600 dark:text-violet-400', accent: 'text-accent-600 dark:text-accent-400' };
 const GRAD: Record<string, string> = { rose: 'from-rose-400 to-rose-600', amber: 'from-amber-400 to-amber-600', mint: 'from-emerald-400 to-emerald-600', violet: 'from-violet-400 to-violet-600', accent: 'from-accent-400 to-accent-600' };
 const SOFT_TONE: Record<string, string> = { mint: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400', amber: 'bg-amber-500/15 text-amber-600 dark:text-amber-400', rose: 'bg-rose-500/15 text-rose-600 dark:text-rose-400' };

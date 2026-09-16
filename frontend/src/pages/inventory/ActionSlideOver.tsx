@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { X, ArrowRight, Mail, Send, PlayCircle, FlaskConical, Check, AlertTriangle } from 'lucide-react';
 import { useRequestStore, ACTION_LABEL, type Priority, type Routing } from '../../store/requestStore';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${Math.round(n)}`);
 
 const PRIORITIES: { k: Priority; label: string; tone: string }[] = [
   { k: 'low', label: 'Low', tone: 'text-navy-500' },

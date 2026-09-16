@@ -24,7 +24,7 @@ from ..services.wizard_service import build_matrix
 
 
 def _money(x: float) -> str:
-    return f"${x:,.0f}"
+    return f"€{x:,.0f}"
 
 
 async def _pairs(repo: InventoryRepo, plant_ids):

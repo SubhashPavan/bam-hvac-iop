@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Check, X, ChevronDown, FlaskConical, CheckCircle2, XCircle, MessageSquare, Inbox, CornerUpLeft } from 'lucide-react';
 import { useRequestStore, STAGE_FLOW, STAGE_LABEL, ACTION_LABEL, type Stage, type ActionRequest } from '../../store/requestStore';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(1)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(1)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(0)}K` : `€${Math.round(n)}`);
 const CHAIN: Stage[] = ['plant_mgr', 'maintenance', 'finance', 'regional', 'global'];
 const PRIO_TONE: Record<string, string> = { urgent: 'bg-rose-500/15 text-rose-600 dark:text-rose-400', high: 'bg-amber-500/15 text-amber-600 dark:text-amber-400', medium: 'bg-accent-500/15 text-accent-600 dark:text-accent-400', low: 'bg-navy-100 text-navy-500 dark:bg-slate-800 dark:text-slate-400' };
 const STAGE_PILL = (stage: Stage) => stage === 'done' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : stage === 'rejected' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : stage === 'executing' ? 'bg-violet-500/15 text-violet-600 dark:text-violet-400' : 'bg-accent-500/15 text-accent-600 dark:text-accent-400';

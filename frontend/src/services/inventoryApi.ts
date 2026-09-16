@@ -79,9 +79,9 @@ interface AgentResponse {
 }
 
 const money = (n: number) =>
-  Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M`
-    : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K`
-    : `$${Math.round(n)}`;
+  Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M`
+    : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K`
+    : `€${Math.round(n)}`;
 
 const TOOL_STEP: Record<string, string> = {
   get_kpis: 'Pulled the KPIs',

@@ -6,7 +6,7 @@ import { getSavingsMatrix, fetchForecastSummaries, type ForecastSummaryRow } fro
 import { useLiveOrMock } from './useLiveData';
 import MaterialAnalysis from './MaterialAnalysis';
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(0)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 const TT: Record<string, string> = { rose: 'text-rose-600 dark:text-rose-400', amber: 'text-amber-600 dark:text-amber-400', mint: 'text-emerald-600 dark:text-emerald-400', violet: 'text-violet-600 dark:text-violet-400', accent: 'text-accent-600 dark:text-accent-400' };
 const PATTERN_TONE: Record<string, string> = { smooth: 'text-emerald-600 dark:text-emerald-400', intermittent: 'text-violet-600 dark:text-violet-400', erratic: 'text-amber-600 dark:text-amber-400', lumpy: 'text-rose-600 dark:text-rose-400', no_demand: 'text-rose-600 dark:text-rose-400' };
 const ACTION_LABEL: Record<string, string> = { reduce_stock: 'Reduce excess', dispose: 'Dispose / write-off', reorder: 'Reorder', healthy: 'Healthy', none: '—' };

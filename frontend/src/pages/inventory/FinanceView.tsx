@@ -3,7 +3,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Responsive
 import { DollarSign, TrendingDown, Gauge, PiggyBank } from 'lucide-react';
 import { financeTotals } from '../../data/inventoryMock';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 
 export default function FinanceView() {
   const fin = useMemo(() => financeTotals(), []);
@@ -45,8 +45,8 @@ export default function FinanceView() {
               <BarChart data={roiData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-navy-100 dark:text-slate-800" />
                 <XAxis dataKey="year" tick={{ fontSize: 10 }} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `$${v}M`} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
-                <Tooltip formatter={(v) => `$${Number(v)}M`} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `€${v}M`} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
+                <Tooltip formatter={(v) => `€${Number(v)}M`} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="investment" name="Investment" fill="#f97316" radius={[3, 3, 0, 0]} />
                 <Bar dataKey="benefit" name="Benefit" fill="#22c55e" radius={[3, 3, 0, 0]} />
@@ -61,8 +61,8 @@ export default function FinanceView() {
               <LineChart data={cashData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-navy-100 dark:text-slate-800" />
                 <XAxis dataKey="year" tick={{ fontSize: 10 }} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `$${v}M`} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
-                <Tooltip formatter={(v) => `$${Number(v)}M`} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `€${v}M`} stroke="currentColor" className="text-navy-400 dark:text-slate-500" />
+                <Tooltip formatter={(v) => `€${Number(v)}M`} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
                 <Line type="monotone" dataKey="cash" name="Cash release" stroke="#22c55e" strokeWidth={2.5} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>

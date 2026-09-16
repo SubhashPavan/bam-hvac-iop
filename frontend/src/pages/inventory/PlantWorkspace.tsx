@@ -7,7 +7,7 @@ import type { Material } from '../../types/inventory';
 import { fetchForecastSummaries, type ForecastSummaryRow } from '../../services/inventoryApi';
 import { useLiveOrMock } from './useLiveData';
 
-const money = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(2)}M` : Math.abs(n) >= 1e3 ? `$${(n / 1e3).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(2)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(1)}K` : `€${Math.round(n)}`);
 const PATTERN_TONE: Record<string, string> = { smooth: 'text-emerald-600 dark:text-emerald-400', intermittent: 'text-violet-600 dark:text-violet-400', erratic: 'text-amber-600 dark:text-amber-400', lumpy: 'text-rose-600 dark:text-rose-400', no_demand: 'text-rose-600 dark:text-rose-400' };
 
 const GROUPS: { k: ClassDim | 'pattern'; label: string }[] = [

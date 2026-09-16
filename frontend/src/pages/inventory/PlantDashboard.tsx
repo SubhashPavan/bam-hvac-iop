@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Toolti
 import { Box, ShieldAlert, TrendingDown, Ban } from 'lucide-react';
 import { PLANTS, MATERIALS } from '../../data/inventoryMock';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 
 export default function PlantDashboard({ plantIds }: { plantIds?: string[] } = {}) {
   const plantList = useMemo(() => PLANTS.filter((p) => !plantIds || plantIds.includes(p.id)), [plantIds]);

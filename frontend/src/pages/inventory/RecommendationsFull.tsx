@@ -9,7 +9,7 @@ import {
   type Recommendation, type RecommendationType, type WorkflowStatus,
 } from '../../types/inventory';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${n.toFixed(0)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${n.toFixed(0)}`);
 
 const TYPE_TONE: Record<RecommendationType, string> = {
   reduce_stock: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',

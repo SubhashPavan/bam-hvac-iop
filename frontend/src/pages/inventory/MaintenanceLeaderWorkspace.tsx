@@ -12,7 +12,7 @@ import MaterialsView from './MaterialsView';
 import PersonaSwitcher from './PersonaSwitcher';
 import type { PersonaId } from './personas';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${Math.round(n)}`);
 const C = { indigo: '#6366f1', amber: '#f59e0b', mint: '#22c55e', rose: '#f43f5e' };
 const AXIS = 'text-navy-400 dark:text-slate-500';
 const GRID = 'text-navy-100 dark:text-slate-800';

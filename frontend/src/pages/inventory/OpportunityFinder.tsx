@@ -6,7 +6,7 @@ import { useRequestStore, ACTION_LABEL, type ActionKind, type ActionSeed } from 
 import { useLiveOrMock } from './useLiveData';
 import { getOpportunities } from '../../services/inventoryApi';
 
-const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `$${(n / 1_000).toFixed(1)}K` : `$${Math.round(n)}`);
+const money = (n: number) => (Math.abs(n) >= 1_000_000 ? `€${(n / 1_000_000).toFixed(2)}M` : Math.abs(n) >= 1_000 ? `€${(n / 1_000).toFixed(1)}K` : `€${Math.round(n)}`);
 
 // Map the backend /opportunities (ML optimal-target logic) → the view's OppGroup shape.
 const TYPE_TO_KEY: Record<string, string> = {
