@@ -39,10 +39,13 @@ ACTION_NARR = {
     "healthy": "are within the healthy band — no action needed this cycle",
 }
 
-# A spare is a "keep even if dead" critical insurance item when it is Vital or
-# highly critical — you never scrap it just because it has not moved.
+# A spare is a "keep even if dead" critical insurance item when its criticality
+# tier is A/B/C — production-down, production-stopper or major-maintenance impact
+# (criticality_score >= 45). You never scrap those just because they have not
+# moved; only tier D/E (minor / inconvenience) low-criticality dead stock is a
+# genuine disposal candidate.
 def _is_critical(m: Material) -> bool:
-    return m.ved == "Vital" or m.criticality_score >= 75
+    return m.ved == "Vital" or m.criticality_score >= 45
 
 
 def _money(n: float) -> str:

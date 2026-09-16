@@ -6,7 +6,8 @@ import type { ForecastSummaryRow } from '../../services/inventoryApi';
 const money = (n: number) => (Math.abs(n) >= 1e6 ? `€${(n / 1e6).toFixed(1)}M` : Math.abs(n) >= 1e3 ? `€${(n / 1e3).toFixed(0)}K` : `€${Math.round(n)}`);
 const PATTERN_TONE: Record<string, string> = { smooth: 'text-emerald-600 dark:text-emerald-400', intermittent: 'text-violet-600 dark:text-violet-400', erratic: 'text-amber-600 dark:text-amber-400', lumpy: 'text-rose-600 dark:text-rose-400', no_demand: 'text-rose-600 dark:text-rose-400' };
 
-export const isCritical = (m: Material) => m.ved === 'Vital' || m.criticality_score >= 75;
+// Critical (retain even if dead) = tier A/B/C: production-down / stopper / major-maintenance (criticality ≥ 45).
+export const isCritical = (m: Material) => m.ved === 'Vital' || m.criticality_score >= 45;
 
 export function statusOf(m: Material, s?: ForecastSummaryRow) {
   // Non-moving with no demand: critical spares are retained (insurance), only low-criticality is disposable.

@@ -11,10 +11,9 @@ import { MATERIALS } from '../../data/inventoryMock';
 import {
   useRequestStore, STAGE_LABEL, type ActionSeed, type ActionKind, type SimSnapshot, type Stage,
 } from '../../store/requestStore';
-import { getForecast, getMaterialInsight, getInventoryPolicy, type PolicyRow } from '../../services/inventoryApi';
+import { getForecast, getMaterialInsight, getInventoryPolicy, setCriticality, type PolicyRow } from '../../services/inventoryApi';
 import { useDebounced } from './useLiveData';
 import { Spinner } from './LoadingBar';
-import { isCritical } from './SkuGrid';
 
 const C = { indigo: '#6366f1', amber: '#f59e0b', mint: '#22c55e', rose: '#f43f5e', violet: '#8b5cf6' };
 const AXIS = 'text-navy-400 dark:text-slate-500';
@@ -85,6 +84,20 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
   const audit = useMemo(() => requests.filter((r) => r.materialId === material.id), [requests, material.id]);
   const [snaps, setSnaps] = useState<SimSnapshot[]>([]);
 
+  // Plant-manager criticality override (drives retain vs dispose). Local + persisted.
+  const [ved, setVed] = useState<Material['ved']>(material.ved);
+  const [critScore, setCritScore] = useState(material.criticality_score);
+  const [savingVed, setSavingVed] = useState(false);
+  const critical = critScore >= 45; // tier A/B/C (production-down / stopper / major-maintenance) → retain
+  useEffect(() => { setVed(material.ved); setCritScore(material.criticality_score); }, [material.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const changeVed = async (v: Material['ved']) => {
+    const score = ({ Vital: 85, Essential: 60, Desirable: 30 } as Record<string, number>)[v] ?? critScore;
+    setVed(v); setCritScore(score); setSavingVed(true);
+    material.ved = v; material.criticality_score = score;   // reflect in the shared list immediately
+    try { await setCriticality(material.id, { ved: v }); } catch { /* keep optimistic */ }
+    setSavingVed(false);
+  };
+
   // Agentic per-SKU read from Claude — fetched per material, refreshable at the chosen policy.
   const [insight, setInsight] = useState<{ insight: string; actions: string[] } | null>(null);
   const [insightLoading, setInsightLoading] = useState(false);
@@ -135,10 +148,10 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
     const onHand = material.on_hand_qty;
     const unit = pol.unitRate;
     if (policy.fsn === 'Non-moving' && Number(policy.consumption_months) === 0 && material.current_stock_value > 2000) {
-      if (isCritical(material)) {
-        return { kind: 'keep_unchanged' as const, savings: 0, target: 0, tone: 'mint', why: `No demand on record — but this is a critical spare (${material.ved}, criticality ${material.criticality_score}). Retain as insurance against production-down; do NOT dispose.` };
+      if (critical) {
+        return { kind: 'keep_unchanged' as const, savings: 0, target: 0, tone: 'mint', why: `No demand on record — but marked critical (${ved}, criticality ${critScore}). Retain as insurance against production-down; do NOT dispose.` };
       }
-      return { kind: 'dispose' as ActionKind, savings: material.current_stock_value, target: 0, tone: 'rose', why: `No consumption on record and low criticality (${material.ved}). Write-off recovers ${money(material.current_stock_value)}.` };
+      return { kind: 'dispose' as ActionKind, savings: material.current_stock_value, target: 0, tone: 'rose', why: `No consumption on record and low criticality (${ved}). Write-off recovers ${money(material.current_stock_value)}.` };
     }
     if (onHand > pol.max) {
       const savings = (onHand - pol.max) * unit;
@@ -155,7 +168,7 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
       return { kind: 'increase_stock' as ActionKind, savings: 0, target: pol.max, tone: 'rose', why: `On-hand ${onHand} below reorder level ${pol.rol}. Reorder ${pol.roq} to protect ${pol.sl}% service.` };
     }
     return { kind: 'keep_unchanged' as const, savings: 0, target: pol.max, tone: 'mint', why: `On-hand ${onHand} is within the healthy band (ROL ${pol.rol}–Max ${pol.max}). No action.` };
-  }, [pol, policy, material]);
+  }, [pol, policy, material, critical, ved, critScore]);
 
   const takeSnapshot = () => {
     if (!pol) return;
@@ -198,8 +211,17 @@ export default function MaterialAnalysis({ material, onBack }: { material: Mater
           <Chip k="Method" v={detail?.method ?? '—'} />
           <Chip k="XYZ" v={material.xyz} />
           <Chip k="FSN" v={material.fsn} />
-          <Chip k="VED" v={material.ved} tone={material.ved === 'Vital' ? 'rose' : material.ved === 'Essential' ? 'amber' : undefined} />
-          <Chip k="Criticality" v={String(material.criticality_score)} />
+          {/* Editable criticality — plant manager sets whether a spare is critical (keep) or disposable */}
+          <span className="inline-flex items-center gap-1 rounded-md border border-accent-300 bg-accent-500/[0.06] px-2 py-1 text-[12px] dark:border-accent-500/40">
+            <span className="text-navy-400 dark:text-slate-500">Criticality</span>
+            <select value={ved} onChange={(e) => changeVed(e.target.value as Material['ved'])} disabled={savingVed}
+              className={`cursor-pointer bg-transparent font-semibold outline-none ${ved === 'Vital' ? 'text-rose-600 dark:text-rose-400' : ved === 'Essential' ? 'text-amber-600 dark:text-amber-400' : 'text-navy-700 dark:text-slate-200'}`}>
+              <option value="Vital">Vital · keep</option>
+              <option value="Essential">Essential</option>
+              <option value="Desirable">Desirable · disposable</option>
+            </select>
+            {savingVed ? <Spinner className="h-3 w-3" /> : <span className="text-[10px] text-navy-400 dark:text-slate-500">({critScore})</span>}
+          </span>
           <Chip k="Fcst acc." v={detail ? `${detail.accuracy.model_accuracy}%` : '—'} tone="mint" />
         </div>
       </div>

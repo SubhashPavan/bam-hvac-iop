@@ -261,6 +261,9 @@ export interface PolicyRow {
   avg_monthly_consumption: number | string; consumption_months: number | string;
 }
 export const getInventoryPolicy = (plantIds?: string[]) => get<PolicyRow[]>(`/forecast/policy${scope(plantIds)}`);
+/** Plant-manager override of a material's criticality (drives retain vs dispose). */
+export const setCriticality = (materialId: string, body: { ved?: string; criticality_score?: number }) =>
+  post<any>(`/materials/${materialId}/criticality`, body);
 
 // ── CSV ingestion (real upload → activate → the whole accelerator runs on it) ──
 export interface IngestPreview {
