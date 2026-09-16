@@ -140,11 +140,14 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
   }
 
   const totalInv = k.total_inventory || 0;
-  const surplus = k.surplus_stock || 0;
-  const obsolete = k.obsolete_stock || 0;
-  const critical = k.critical_retained_stock || 0;
-  const optimized = Math.max(0, totalInv - surplus - obsolete - critical);
-  const release = surplus + obsolete;                 // what you free up
+  // 5-bucket partition (each item's full value in one) — these add to total.
+  const rightly = k.rightly_stocked ?? Math.max(0, totalInv - (k.excess_stock || 0) - (k.understock_stock || 0) - (k.critical_retained_stock || 0) - (k.obsolete_stock || 0));
+  const excessStock = k.excess_stock || 0;            // full value of over-stocked items
+  const understockStock = k.understock_stock || 0;    // full value of under-stocked items (they hold little)
+  const critical = k.critical_retained_stock || 0;    // dead but critical (retain)
+  const obsolete = k.obsolete_stock || 0;             // dead, low-criticality (dispose)
+  const trimmable = k.surplus_stock || 0;             // the portion of excess you can release
+  const release = trimmable + obsolete;               // total you free up
   const workingCap = k.working_capital_release || 0;  // ~70% recoverable
   const addInvest = k.understock_investment || 0;     // € to top up under-stocked
   const ssTarget = k.safety_stock || 0;               // recommended safety buffer
@@ -160,40 +163,44 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
 
       {/* Savings bridge — where the money is */}
       <div className="mb-4 rounded-xl border border-navy-100 bg-white p-4 dark:border-slate-800 dark:bg-[#211c33]">
-        <div className="mb-1.5 text-[14.5px] font-semibold">You're holding <span className="text-accent-600 dark:text-accent-300">{money(totalInv)}</span> across {k.sku_count || 0} SKUs — <span className="text-amber-600 dark:text-amber-400">{money(surplus + obsolete)} is optimization opportunity</span>.</div>
-        <div className="mb-2 text-[12.5px] text-navy-500 dark:text-slate-500">Rightsizing releases working capital and writes off <b>low-criticality</b> dead stock. Critical spares stay put — {money(critical)} of no-demand Vital/high-criticality stock is <b>retained as insurance</b>, never disposed.</div>
+        <div className="mb-1.5 text-[14.5px] font-semibold">You're holding <span className="text-accent-600 dark:text-accent-300">{money(totalInv)}</span> across {k.sku_count || 0} SKUs — <span className="text-amber-600 dark:text-amber-400">{money(release)} is optimization opportunity</span>.</div>
+        <div className="mb-2 text-[12.5px] text-navy-500 dark:text-slate-500">Every SKU's stock falls into one state: at the right level, over-stocked, under-stocked, or dead (retained-critical vs disposable). The five add up to your {money(totalInv)}.</div>
         <div className="flex h-8 w-full overflow-hidden rounded-lg">
-          <div className="flex items-center justify-center bg-emerald-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(optimized) }} title="Working stock">{optimized > totalInv * 0.12 ? 'Working' : ''}</div>
-          <div className="flex items-center justify-center bg-amber-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(surplus) }} title="Excess">{surplus > totalInv * 0.08 ? money(surplus) : ''}</div>
+          <div className="flex items-center justify-center bg-emerald-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(rightly) }} title="Rightly stocked">{rightly > totalInv * 0.1 ? 'Rightly stocked' : ''}</div>
+          <div className="flex items-center justify-center bg-amber-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(excessStock) }} title="Excess">{excessStock > totalInv * 0.08 ? money(excessStock) : ''}</div>
+          <div className="flex items-center justify-center bg-violet-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(understockStock) }} title="Under-stocked">{understockStock > totalInv * 0.06 ? money(understockStock) : ''}</div>
           <div className="flex items-center justify-center bg-sky-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(critical) }} title="Critical retained">{critical > totalInv * 0.08 ? money(critical) : ''}</div>
           <div className="flex items-center justify-center bg-rose-500/80 text-[11.5px] font-semibold text-white" style={{ width: seg(obsolete) }} title="Obsolete (disposable)">{obsolete > totalInv * 0.05 ? money(obsolete) : ''}</div>
         </div>
         <div className="mt-1.5 flex flex-wrap gap-3 text-[11.5px] text-navy-500 dark:text-slate-400">
-          <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-emerald-500/80" /> Working stock {money(optimized)}</span>
-          <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-amber-500/80" /> Excess / overstock {money(surplus)}</span>
+          <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-emerald-500/80" /> Rightly stocked {money(rightly)}</span>
+          <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-amber-500/80" /> Excess {money(excessStock)}</span>
+          <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-violet-500/80" /> Under-stocked {money(understockStock)}</span>
           <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-sky-500/80" /> Critical retained {money(critical)}</span>
           <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm bg-rose-500/80" /> Obsolete (dispose) {money(obsolete)}</span>
         </div>
       </div>
 
-      {/* Reconciliation band — Total = Optimized + Excess + Obsolete (it all adds up) */}
+      {/* Reconciliation band — Total = Rightly stocked + Excess + Under-stocked + Critical + Obsolete */}
       <div className="mb-1.5 text-[11.5px] font-semibold uppercase tracking-wide text-navy-400 dark:text-slate-500">How your {money(totalInv)} breaks down</div>
       <div className="mb-3 flex flex-wrap items-stretch gap-2">
-        <div className="min-w-[150px] flex-1"><Kpi value={money(totalInv)} label="Total inventory" sub={`${k.sku_count || 0} SKUs`} /></div>
-        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">=</div>
-        <div className="min-w-[130px] flex-1"><Kpi value={money(optimized)} label="Working stock" sub="moving · in band" tone="mint" /></div>
-        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
-        <div className="min-w-[130px] flex-1"><Kpi value={money(surplus)} label="Excess / overstock" sub="reduce · rebalance" tone="amber" /></div>
-        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
-        <div className="min-w-[130px] flex-1"><Kpi value={money(critical)} label="Critical retained" sub="dead but keep · insurance" tone="accent" /></div>
-        <div className="flex items-center px-1 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
-        <div className="min-w-[130px] flex-1"><Kpi value={money(obsolete)} label="Obsolete (dispose)" sub="low-criticality write-off" tone="rose" /></div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(totalInv)} label="Total inventory" sub={`${k.sku_count || 0} SKUs`} /></div>
+        <div className="flex items-center px-0.5 text-[19px] font-bold text-navy-400 dark:text-slate-500">=</div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(rightly)} label="Rightly stocked" sub="correct per policy" tone="mint" /></div>
+        <div className="flex items-center px-0.5 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(excessStock)} label="Excess" sub="over-stocked" tone="amber" /></div>
+        <div className="flex items-center px-0.5 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(understockStock)} label="Under-stocked" sub="below reorder" tone="violet" /></div>
+        <div className="flex items-center px-0.5 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(critical)} label="Critical retained" sub="dead · keep" tone="accent" /></div>
+        <div className="flex items-center px-0.5 text-[19px] font-bold text-navy-400 dark:text-slate-500">+</div>
+        <div className="min-w-[120px] flex-1"><Kpi value={money(obsolete)} label="Obsolete" sub="dead · dispose" tone="rose" /></div>
       </div>
 
       {/* Derived from the equation — where the money goes */}
       <div className="mb-3 rounded-xl border border-navy-100 bg-white px-4 py-3 text-[13px] leading-relaxed text-navy-700 dark:border-slate-800 dark:bg-[#211c33] dark:text-slate-200">
-        Free up <b className="text-amber-600 dark:text-amber-400">{money(release)}</b> — reduce {money(surplus)} excess + write off {money(obsolete)} obsolete — to release <b className="text-emerald-600 dark:text-emerald-400">{money(workingCap)}</b> of working capital.
-        Then <b className="text-accent-600 dark:text-accent-400">invest {money(addInvest)}</b> to top up under-stocked items to the <b>{money(ssTarget)}</b> safety-stock the policy needs. Critical spares ({money(critical)}) stay put.
+        Free up <b className="text-amber-600 dark:text-amber-400">{money(release)}</b> — trim {money(trimmable)} from the excess + write off {money(obsolete)} obsolete — to release <b className="text-emerald-600 dark:text-emerald-400">{money(workingCap)}</b> of working capital.
+        Then <b className="text-accent-600 dark:text-accent-400">invest {money(addInvest)}</b> to top up the under-stocked items to the <b>{money(ssTarget)}</b> safety-stock the policy needs. Critical spares ({money(critical)}) stay put.
       </div>
 
       {/* Opportunity & health */}

@@ -62,50 +62,56 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         return {"kpis": {}, "cells": [], "insights": [], "tier": {}}
     tiers = {m.id: _tier(m) for m, _ in pairs}
     cells: dict[tuple, dict] = {}
-    inv = ss = surplus = obsolete = critical_retained = understock_inv = 0.0
+    inv = ss = 0.0
+    # 5-bucket partition of the total inventory value (each item's FULL value in one):
+    rightly = excess_stock = understock_stock = obsolete = critical_retained = 0.0
+    surplus_opp = understock_inv = 0.0   # trimmable excess portion; € to add to under-stocked
     understock_ct = 0
 
     for m, series in pairs:
-        o = optimal_target(m, series)
         key = (m.fsn, tiers[m.id])
         c = cells.setdefault(key, {"count": 0, "value": 0.0, "savings": 0.0, "opp_count": 0,
                                    "excess": 0.0, "obsolete": 0.0, "critical": 0.0, "understock": 0})
         c["count"] += 1
-        c["value"] += m.current_stock_value
-        inv += m.current_stock_value
-        # Stocking policy (single source): safety stock = ceil(z95·σ), reorder level
-        # = floor(SS + avg monthly consumption) at a flat 30-day lead. Value at the
-        # SAME unit rate the policy uses (closing value ÷ closing stock).
+        val = m.current_stock_value
+        c["value"] += val
+        inv += val
+        # Single stocking policy: SS = ceil(z95·σ); reorder level = floor(SS + avg);
+        # target ceiling = ROL + one cycle. Value at unit rate (closing value ÷ stock).
         _cons = [max(0.0, float(x)) for x in series]
         _std = float(np.std(_cons)) if len(_cons) > 1 else 0.0
         _avg = float(np.mean(_cons)) if _cons else 0.0
+        _months_active = sum(1 for x in _cons if x > 0)
         _ss_units = math.ceil(_Z95 * _std)
         _rol_units = math.floor(_ss_units + _avg)
-        _unit_rate = (m.current_stock_value / m.on_hand_qty) if (m.on_hand_qty > 0 and m.current_stock_value > 0) else 0.0
+        _max_units = _rol_units + math.ceil(_avg)
+        _unit_rate = (val / m.on_hand_qty) if (m.on_hand_qty > 0 and val > 0) else 0.0
         ss += _ss_units * _unit_rate
 
         sku_sav = 0.0
         needs_reorder = False
-        if (o["pattern"] == "no_demand" or o["rate"] < 0.05) and m.fsn == "Non-moving":
+        if _months_active == 0:                              # dead / non-moving
             if _is_critical(m):
-                # Critical insurance spare — retain even with no demand, NOT a write-off.
-                c["critical"] += m.current_stock_value
-                critical_retained += m.current_stock_value
+                critical_retained += val
+                c["critical"] += val
             else:
-                sku_sav = m.current_stock_value
-                c["obsolete"] += sku_sav
-                obsolete += sku_sav
-        elif o["excess_value"] > 0:
-            sku_sav = o["excess_value"]
-            c["excess"] += sku_sav
-            surplus += sku_sav
-        elif m.on_hand_qty < _rol_units:
-            needs_reorder = True
-            c["understock"] += 1
-            understock_ct += 1
-            # € to buy to bring this item up to its reorder level (new investment).
-            # Only where a unit rate exists (can't value a zero-stock item's cost).
+                obsolete += val
+                c["obsolete"] += val
+                sku_sav = val
+        elif m.on_hand_qty > _max_units:                     # overstocked
+            excess_stock += val
+            _exc = max(0.0, m.on_hand_qty - _max_units) * _unit_rate
+            surplus_opp += _exc
+            c["excess"] += _exc
+            sku_sav = _exc
+        elif m.on_hand_qty < _rol_units:                     # under-stocked
+            understock_stock += val
             understock_inv += max(0.0, _rol_units - m.on_hand_qty) * _unit_rate
+            needs_reorder = True
+            understock_ct += 1
+            c["understock"] += 1
+        else:                                                # rightly stocked (in band)
+            rightly += val
         c["savings"] += sku_sav
 
         is_p1 = m.ved == "Vital" or m.criticality_score >= 75
@@ -136,21 +142,27 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
     annual_cogs = sum(m.unit_cost * m.avg_monthly_demand * 12 for m, _ in pairs)
     turns = round(annual_cogs / inv, 1) if inv else 0.0
     service = round(sum(p.service_level for p in plants) / len(plants), 1) if plants else 0.0
-    opportunity = surplus + obsolete
+    opportunity = surplus_opp + obsolete
     kpis = {
         "total_inventory": round(inv, 0), "sku_count": n, "safety_stock": round(ss, 0),
-        "surplus_stock": round(surplus, 0), "obsolete_stock": round(obsolete, 0),
+        # 5-bucket partition — these add up to total_inventory
+        "rightly_stocked": round(rightly, 0),
+        "excess_stock": round(excess_stock, 0),
+        "understock_stock": round(understock_stock, 0),
         "critical_retained_stock": round(critical_retained, 0),
-        "understock_investment": round(understock_inv, 0),
+        "obsolete_stock": round(obsolete, 0),
+        # opportunities / investment derived from the partition
+        "surplus_stock": round(surplus_opp, 0),          # trimmable excess portion
+        "understock_investment": round(understock_inv, 0),  # € to top up under-stocked
         "total_opportunity": round(opportunity, 0),
         "working_capital_release": round(opportunity * 0.7, 0),
         "service_level": service, "at_risk_skus": understock_ct, "inventory_turns": turns,
     }
     insights = [
-        f"{n} SKUs analyzed across the Fast/Slow/Non-moving × criticality matrix; {_money(opportunity)} total opportunity.",
-        f"{_money(surplus)} of surplus/excess can be released by rightsizing safety stock to the optimal policy.",
-        f"{_money(obsolete)} in non-moving, low-criticality dead stock — dispose / write-off candidates.",
+        f"{n} SKUs; total {_money(inv)} = rightly stocked {_money(rightly)} + excess {_money(excess_stock)} "
+        f"+ under-stocked {_money(understock_stock)} + critical retained {_money(critical_retained)} + obsolete {_money(obsolete)}.",
+        f"{_money(surplus_opp)} is trimmable from over-stocked items; {_money(obsolete)} is low-criticality dead stock to write off.",
         f"{_money(critical_retained)} in non-moving but critical spares — retained as insurance despite no demand.",
-        f"{understock_ct} SKUs are below reorder point and at stockout risk — reorder or rebalance.",
+        f"{understock_ct} SKUs are below reorder level — top up ~{_money(understock_inv)} to protect service.",
     ]
     return {"kpis": kpis, "cells": cell_list, "insights": insights, "tier": tiers}
