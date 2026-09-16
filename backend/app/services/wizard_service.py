@@ -8,8 +8,14 @@ grouped. Plus the KPI band and portfolio insights.
 """
 from __future__ import annotations
 
+import math
+
+import numpy as np
+
 from ..db.models import Material
 from ..ml.optimize import optimal_target
+
+_Z95 = 1.645  # 95% service level — the single stocking-policy standard
 
 FSN_ORDER = ["Fast", "Slow", "Non-moving"]
 TIER_ORDER = ["A", "B", "C", "D", "E"]
@@ -64,7 +70,11 @@ def build_matrix(pairs: list[tuple[Material, list]], plants: list | None = None)
         c["count"] += 1
         c["value"] += m.current_stock_value
         inv += m.current_stock_value
-        ss += o["safety_stock"] * m.unit_cost
+        # Safety stock consistent with the single stocking policy:
+        # ceil(z95 · σ(monthly consumption)) at a flat 30-day lead, valued at unit cost.
+        _cons = [max(0.0, float(x)) for x in series]
+        _std = float(np.std(_cons)) if len(_cons) > 1 else 0.0
+        ss += math.ceil(_Z95 * _std) * m.unit_cost
 
         sku_sav = 0.0
         needs_reorder = False

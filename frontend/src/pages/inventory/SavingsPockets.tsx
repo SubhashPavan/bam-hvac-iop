@@ -190,7 +190,7 @@ export default function SavingsPockets({ plantIds }: { plantIds: string[] }) {
       <div className="mb-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
         <Kpi value={money(k.total_opportunity || 0)} label="Total opportunity" sub="excess + obsolete" tone="amber" />
         <Kpi value={money(k.working_capital_release || 0)} label="Working capital" sub="releasable" tone="mint" />
-        <Kpi value={money(k.safety_stock || 0)} label="Safety stock" sub="optimal" />
+        <Kpi value={money(k.safety_stock || 0)} label="Safety stock (target)" sub="recommended buffer" />
         <Kpi value={`${k.service_level || 0}%`} label="Service level" sub={`turns ${k.inventory_turns || 0}×`} tone={k.service_level < 92 ? 'amber' : 'mint'} />
         <Kpi value={String(k.at_risk_skus || 0)} label="At stockout risk" tone="rose" />
       </div>
